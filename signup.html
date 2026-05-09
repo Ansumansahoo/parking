@@ -1,1 +1,151 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sign Up - ParkEase</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1a4a2e,#2d8a5e);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}.auth-card{background:#fff;border-radius:16px;padding:40px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.3);}.auth-logo{text-align:center;margin-bottom:24px;}.auth-logo a{font-size:1.8rem;font-weight:800;color:#1a3c5e;text-decoration:none;}.auth-logo a span{color:#f5a623;}h2{text-align:center;color:#1a3c5e;margin-bottom:6px;font-size:1.5rem;}.auth-sub{text-align:center;color:#888;font-size:.9rem;margin-bottom:24px;}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}.form-group{margin-bottom:14px;}.form-group label{display:block;font-size:.83rem;color:#555;margin-bottom:5px;font-weight:600;}.req{color:#e74c3c;}.input-wrap{position:relative;}.input-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#aaa;font-size:.9rem;}.form-group input,.form-group select{width:100%;padding:10px 12px 10px 34px;border:1px solid #ddd;border-radius:6px;font-size:.9rem;font-family:inherit;}.form-group input:focus,.form-group select:focus{outline:none;border-color:#1a3c5e;}.gender-opts{display:flex;gap:20px;margin-top:4px;}.gender-opts label{display:flex;align-items:center;gap:6px;font-size:.9rem;color:#555;cursor:pointer;}.btn-auth{width:100%;padding:12px;background:#f5a623;color:#fff;border:none;border-radius:6px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:8px;}.btn-auth:hover{background:#d48a10;}.auth-alt{text-align:center;margin-top:16px;font-size:.9rem;color:#888;}.auth-alt a{color:#1a3c5e;font-weight:700;text-decoration:none;}.success-card{display:none;text-align:center;padding:20px 0;}.success-card i{font-size:3.5rem;color:#2ecc71;margin-bottom:14px;}.success-card h3{color:#1a3c5e;margin-bottom:8px;}.success-card a{display:inline-block;margin-top:14px;padding:10px 24px;background:#f5a623;color:#fff;border-radius:5px;text-decoration:none;font-weight:700;}@media(max-width:480px){.form-row{grid-template-columns:1fr;}}</style></head><body><div class="auth-card"><div class="auth-logo"><a href="index.html">Park<span>Ease</span></a></div><div id="formSection"><h2>Create Account</h2><p class="auth-sub">Join ParkEase and start booking smarter</p><form onsubmit="doSignup(event)"><div class="form-row"><div class="form-group"><label>First Name <span class="req">*</span></label><div class="input-wrap"><i class="fa fa-user"></i><input type="text" required placeholder="First name"></div></div><div class="form-group"><label>Last Name <span class="req">*</span></label><div class="input-wrap"><i class="fa fa-user"></i><input type="text" required placeholder="Last name"></div></div></div><div class="form-group"><label>Email <span class="req">*</span></label><div class="input-wrap"><i class="fa fa-envelope"></i><input type="email" required placeholder="you@example.com"></div></div><div class="form-group"><label>Phone <span class="req">*</span></label><div class="input-wrap"><i class="fa fa-phone"></i><input type="tel" required placeholder="+91 XXXXX XXXXX"></div></div><div class="form-group"><label>Password <span class="req">*</span></label><div class="input-wrap"><i class="fa fa-lock"></i><input type="password" required placeholder="Min. 6 characters" minlength="6"></div></div><div class="form-group"><label>Gender <span class="req">*</span></label><div class="gender-opts"><label><input type="radio" name="gender" value="male" required> Male</label><label><input type="radio" name="gender" value="female"> Female</label><label><input type="radio" name="gender" value="other"> Other</label></div></div><button type="submit" class="btn-auth">Create Account</button></form><p class="auth-alt">Already have an account? <a href="login.html">Sign In</a></p></div><div class="success-card" id="successCard"><i class="fa fa-check-circle"></i><h3>Account Created!</h3><p>Welcome to ParkEase. Your account is ready.</p><a href="login.html">Sign In Now</a></div></div><script>function doSignup(e){e.preventDefault();document.getElementById('formSection').style.display='none';document.getElementById('successCard').style.display='block';}</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - ParkEase</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #1a2942 0%, #2d5a3d 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+    .card { background: white; border-radius: 20px; padding: 40px 36px; width: 100%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .brand { text-align: center; margin-bottom: 28px; }
+    .brand-logo { font-size: 1.8rem; font-weight: 800; color: #1a2942; }
+    .brand-logo span { color: #f5a623; }
+    h2 { font-size: 1.4rem; font-weight: 800; color: #1a2942; text-align: center; margin-bottom: 6px; }
+    .sub { text-align: center; color: #888; font-size: 0.88rem; margin-bottom: 24px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .input-wrap { position: relative; }
+    .input-wrap i { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #b0b8c1; font-size: 0.9rem; pointer-events: none; }
+    .input-wrap input, .input-wrap select { width: 100%; padding: 11px 13px 11px 38px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.92rem; color: #1a2942; background: #f8fafc; outline: none; transition: border-color 0.2s; font-family: inherit; }
+    .input-wrap input:focus, .input-wrap select:focus { border-color: #f5a623; background: white; }
+    .radio-group { display: flex; gap: 16px; padding: 11px 0; }
+    .radio-group label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #555; cursor: pointer; font-weight: normal; text-transform: none; letter-spacing: 0; }
+    .radio-group input { accent-color: #f5a623; width: 16px; height: 16px; }
+    .btn-signup { width: 100%; background: linear-gradient(135deg, #f5a623, #e8941a); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
+    .btn-signup:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
+    .btn-signup:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .login-link { text-align: center; font-size: 0.88rem; color: #888; margin-top: 18px; }
+    .login-link a { color: #f5a623; font-weight: 700; text-decoration: none; }
+    .alert { border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-bottom: 14px; display: none; align-items: center; gap: 8px; }
+    .alert.show { display: flex; }
+    .alert-error { background: #ffebee; color: #e53935; }
+    .alert-success { background: #e8f5e9; color: #2e7d32; }
+    .db-badge { background: #e8f5e9; border: 1px solid #43a047; border-radius: 6px; padding: 6px 12px; font-size: 0.78rem; color: #2e7d32; text-align: center; margin-bottom: 16px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="card">
+  <div class="brand"><div class="brand-logo">Park<span>Ease</span></div></div>
+  <h2>Create Account</h2>
+  <p class="sub">Join ParkEase and start booking smarter</p>
+  <div class="db-badge"><i class="fa fa-database" style="margin-right:5px;"></i> Connected to live database</div>
+
+  <div class="alert alert-error" id="errorMsg"><i class="fa fa-exclamation-circle"></i> <span id="errorText"></span></div>
+  <div class="alert alert-success" id="successMsg"><i class="fa fa-check-circle"></i> Account created! Redirecting to login...</div>
+
+  <form id="signupForm" onsubmit="handleSignup(event)">
+    <div class="form-row">
+      <div class="form-group">
+        <label>First Name *</label>
+        <div class="input-wrap"><i class="fa fa-user"></i><input type="text" id="firstName" placeholder="First name" required /></div>
+      </div>
+      <div class="form-group">
+        <label>Last Name *</label>
+        <div class="input-wrap"><i class="fa fa-user"></i><input type="text" id="lastName" placeholder="Last name" required /></div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email Address *</label>
+      <div class="input-wrap"><i class="fa fa-envelope"></i><input type="email" id="email" placeholder="you@example.com" required /></div>
+    </div>
+    <div class="form-group">
+      <label>Phone Number *</label>
+      <div class="input-wrap"><i class="fa fa-phone"></i><input type="tel" id="phone" placeholder="+91 XXXXX XXXXX" required /></div>
+    </div>
+    <div class="form-group">
+      <label>Password *</label>
+      <div class="input-wrap"><i class="fa fa-lock"></i><input type="password" id="password" placeholder="Min. 6 characters" required minlength="6" /></div>
+    </div>
+    <div class="form-group">
+      <label>Gender *</label>
+      <div class="radio-group">
+        <label><input type="radio" name="gender" value="Male" required /> Male</label>
+        <label><input type="radio" name="gender" value="Female" /> Female</label>
+        <label><input type="radio" name="gender" value="Other" /> Other</label>
+      </div>
+    </div>
+    <button type="submit" class="btn-signup" id="submitBtn">
+      <i class="fa fa-user-plus" style="margin-right:8px;"></i>Create Account
+    </button>
+  </form>
+  <p class="login-link">Already have an account? <a href="login.html">Sign In</a></p>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://xpziztrwufkqndzeguyj.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function handleSignup(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const errorDiv = document.getElementById('errorMsg');
+    const successDiv = document.getElementById('successMsg');
+    errorDiv.classList.remove('show');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right:8px;"></i>Creating Account...';
+
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const password = document.getElementById('password').value;
+    const genderEl = document.querySelector('input[name="gender"]:checked');
+    const gender = genderEl ? genderEl.value : '';
+
+    if (!gender) {
+      document.getElementById('errorText').textContent = 'Please select your gender.';
+      errorDiv.classList.add('show');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-user-plus" style="margin-right:8px;"></i>Create Account';
+      return;
+    }
+
+    // Check if email already exists
+    const { data: existing } = await sb.from('users').select('id').eq('email', email).single();
+    if (existing) {
+      document.getElementById('errorText').textContent = 'An account with this email already exists.';
+      errorDiv.classList.add('show');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-user-plus" style="margin-right:8px;"></i>Create Account';
+      return;
+    }
+
+    // Insert user into database
+    const { data, error } = await sb.from('users').insert([{
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+      phone: phone,
+      gender: gender,
+      password_hash: btoa(password)
+    }]).select();
+
+    if (error) {
+      document.getElementById('errorText').textContent = error.message || 'Sign up failed. Please try again.';
+      errorDiv.classList.add('show');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-user-plus" style="margin-right:8px;"></i>Create Account';
+    } else {
+      successDiv.classList.add('show');
+      localStorage.setItem('parkease_new_user_email', email);
+      setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+    }
+  }
+</script>
+</body>
+</html>
