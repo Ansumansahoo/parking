@@ -2,402 +2,163 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ParkEase — Smart Parking Management, Bhubaneswar</title>
-<meta name="description" content="Book parking slots instantly in Bhubaneswar, Puri and Cuttack. Secure, affordable, real-time parking powered by ParkEase.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParkEase — Smart Parking, Bhubaneswar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-:root{--primary:#0F2D52;--primary-light:#1565C0;--accent:#F59E0B;--accent-dark:#D97706;--green:#16A34A;--red:#DC2626;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-400:#9CA3AF;--gray-600:#4B5563;--gray-800:#1F2937;--white:#FFFFFF;--shadow-sm:0 1px 3px rgba(0,0,0,0.08);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 10px 25px rgba(0,0,0,0.10);--radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-pill:999px;--transition:all 0.2s ease;}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--gray-50);color:var(--gray-800);-webkit-font-smoothing:antialiased;}
-a{text-decoration:none;}
-.pe-nav{background:var(--primary);height:64px;display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,0.25);}
-.pe-nav-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
-.pe-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-0.5px;}
-.pe-brand-icon{width:36px;height:36px;background:var(--accent);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:16px;}
-.pe-brand-txt span{color:var(--accent);}
-.pe-nav-links{display:flex;list-style:none;gap:4px;align-items:center;}
-.pe-nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.875rem;font-weight:500;padding:7px 14px;border-radius:var(--radius-sm);transition:var(--transition);}
-.pe-nav-links a:hover{color:#fff;background:rgba(255,255,255,0.1);}
-.pe-nav-links a.active{color:var(--accent);font-weight:600;}
-.pe-nav-links a.partner-link{color:var(--accent);font-weight:600;border:1px solid rgba(245,158,11,0.4);border-radius:var(--radius-pill);}
-.pe-nav-links a.partner-link:hover{background:rgba(245,158,11,0.15);}
-.pe-nav-actions{display:flex;gap:10px;align-items:center;}
-.pe-btn-login{color:rgba(255,255,255,0.85);background:transparent;border:1.5px solid rgba(255,255,255,0.3);padding:7px 16px;border-radius:var(--radius-pill);font-size:0.85rem;font-weight:600;cursor:pointer;text-decoration:none;transition:var(--transition);}
-.pe-btn-login:hover{border-color:rgba(255,255,255,0.7);color:#fff;}
-.pe-btn-signup{background:var(--accent);color:var(--primary);border:none;padding:8px 18px;border-radius:var(--radius-pill);font-size:0.85rem;font-weight:700;cursor:pointer;text-decoration:none;transition:var(--transition);}
-.pe-btn-signup:hover{background:var(--accent-dark);transform:translateY(-1px);}
-/* HERO */
-.hero{background:linear-gradient(135deg,var(--primary) 0%,#1a3a6e 50%,#0d2547 100%);color:#fff;padding:80px 24px 90px;text-align:center;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
-.hero-inner{max-width:700px;margin:0 auto;position:relative;}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.35);color:var(--accent);padding:6px 16px;border-radius:var(--radius-pill);font-size:0.8rem;font-weight:600;margin-bottom:20px;letter-spacing:0.05em;}
-.hero h1{font-size:3rem;font-weight:900;line-height:1.1;margin-bottom:16px;letter-spacing:-1px;}
-.hero h1 span{color:var(--accent);}
-.hero-sub{font-size:1.1rem;color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto 36px;line-height:1.6;}
-.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
-.hero-btns a{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:var(--radius-md);font-size:0.95rem;font-weight:700;transition:var(--transition);}
-.hero-btn-primary{background:var(--accent);color:var(--primary);}
-.hero-btn-primary:hover{background:var(--accent-dark);transform:translateY(-2px);box-shadow:0 6px 20px rgba(245,158,11,0.4);}
-.hero-btn-secondary{background:rgba(255,255,255,0.1);color:#fff;border:1.5px solid rgba(255,255,255,0.3);}
-.hero-btn-secondary:hover{background:rgba(255,255,255,0.2);}
-.hero-stats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin-top:52px;padding-top:36px;border-top:1px solid rgba(255,255,255,0.1);}
-.hero-stat .val{font-size:2rem;font-weight:900;color:var(--accent);}
-.hero-stat .lbl{font-size:0.75rem;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;}
-/* TRUST BAR */
-.trust-bar{background:#fff;border-bottom:1px solid var(--gray-100);padding:12px 24px;}
-.trust-bar-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;gap:32px;flex-wrap:wrap;}
-.trust-item{display:flex;align-items:center;gap:7px;font-size:0.8rem;font-weight:600;color:var(--gray-600);}
-.trust-item i{color:var(--green);font-size:13px;}
-/* SECTIONS */
-.section{padding:64px 24px;}
-.section-inner{max-width:1200px;margin:0 auto;}
-.section-title{text-align:center;margin-bottom:48px;}
-.section-title h2{font-size:1.875rem;font-weight:800;color:var(--primary);letter-spacing:-0.5px;margin-bottom:10px;}
-.section-title p{color:var(--gray-600);font-size:0.95rem;}
-.section-title .bar{width:48px;height:3px;background:var(--accent);border-radius:2px;margin:14px auto 0;}
-/* HOW IT WORKS */
-.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
-.how-card{background:#fff;border-radius:var(--radius-lg);padding:28px 22px;text-align:center;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);transition:var(--transition);}
-.how-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
-.how-num{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-size:1.25rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
-.how-card h3{font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:8px;}
-.how-card p{font-size:0.875rem;color:var(--gray-600);line-height:1.5;}
-/* WHY CHOOSE */
-.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-.why-card{background:#fff;border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);transition:var(--transition);}
-.why-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--accent);}
-.why-icon{width:52px;height:52px;border-radius:var(--radius-md);background:linear-gradient(135deg,rgba(15,45,82,0.08),rgba(21,101,192,0.12));display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--primary-light);margin-bottom:16px;}
-.why-card h3{font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:8px;}
-.why-card p{font-size:0.875rem;color:var(--gray-600);line-height:1.55;}
-/* PRICING HIGHLIGHT */
-.pricing-section{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;padding:64px 24px;}
-.pricing-inner{max-width:1200px;margin:0 auto;}
-.pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;}
-.price-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-lg);padding:28px;text-align:center;backdrop-filter:blur(8px);}
-.price-card.featured{background:#fff;color:var(--primary);transform:scale(1.04);}
-.price-card h3{font-size:1rem;font-weight:700;margin-bottom:8px;opacity:0.9;}
-.price-card .price{font-size:2.5rem;font-weight:900;color:var(--accent);margin:12px 0 4px;}
-.price-card.featured .price{color:var(--primary);}
-.price-card .per{font-size:0.8rem;opacity:0.7;margin-bottom:20px;}
-.price-card ul{list-style:none;text-align:left;}
-.price-card ul li{padding:7px 0;font-size:0.875rem;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:8px;}
-.price-card.featured ul li{border-color:var(--gray-100);}
-.price-card ul li i{color:var(--accent);width:14px;}
-.price-card.featured ul li i{color:var(--green);}
-/* PARTNER CTA */
-.partner-cta{background:var(--gray-50);padding:64px 24px;}
-.partner-cta-inner{max-width:900px;margin:0 auto;background:linear-gradient(135deg,var(--primary),#1a3a6e);border-radius:var(--radius-xl);padding:60px 40px;text-align:center;color:#fff;position:relative;overflow:hidden;}
-.partner-cta-inner::before{content:'🅿';position:absolute;right:-20px;bottom:-20px;font-size:160px;opacity:0.05;}
-.partner-cta-inner h2{font-size:2rem;font-weight:900;margin-bottom:12px;letter-spacing:-0.5px;}
-.partner-cta-inner h2 span{color:var(--accent);}
-.partner-cta-inner p{font-size:1rem;color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto 28px;}
-.partner-stats{display:flex;justify-content:center;gap:40px;margin-bottom:32px;flex-wrap:wrap;}
-.p-stat .pval{font-size:2rem;font-weight:900;color:var(--accent);}
-.p-stat .plbl{font-size:0.75rem;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.05em;}
-/* NEWS */
-.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-.news-card{background:#fff;border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);transition:var(--transition);}
-.news-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
-.news-date{display:inline-flex;align-items:center;gap:6px;background:var(--gray-100);color:var(--gray-600);font-size:0.75rem;font-weight:600;padding:4px 10px;border-radius:var(--radius-pill);margin-bottom:12px;}
-.news-card h4{font-size:0.95rem;font-weight:700;color:var(--primary);margin-bottom:8px;}
-.news-card p{font-size:0.85rem;color:var(--gray-600);line-height:1.5;}
-/* FOOTER */
-.pe-footer{background:var(--primary);color:rgba(255,255,255,0.7);padding:56px 24px 24px;}
-.pe-footer-inner{max-width:1200px;margin:0 auto;}
-.pe-footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
-.pe-footer-brand{font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-0.3px;}
-.pe-footer-brand span{color:var(--accent);}
-.pe-footer-tagline{font-size:0.85rem;line-height:1.6;max-width:220px;}
-.pe-footer-col h4{color:#fff;font-size:0.8rem;font-weight:700;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.06em;}
-.pe-footer-links{list-style:none;}
-.pe-footer-links li{margin-bottom:10px;}
-.pe-footer-links a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem;transition:var(--transition);}
-.pe-footer-links a:hover{color:var(--accent);}
-.pe-footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;flex-wrap:wrap;gap:10px;}
-.pe-footer-bottom a{color:var(--accent);}
-.social-links{display:flex;gap:12px;margin-top:16px;}
-.social-links a{color:rgba(255,255,255,0.45);font-size:17px;transition:var(--transition);}
-.social-links a:hover{color:var(--accent);}
-@media(max-width:900px){.how-grid{grid-template-columns:repeat(2,1fr);}.why-grid{grid-template-columns:repeat(2,1fr);}.pricing-cards{grid-template-columns:1fr;}.price-card.featured{transform:none;}.news-grid{grid-template-columns:1fr;}.pe-footer-grid{grid-template-columns:1fr 1fr;gap:24px;}.pe-nav-links{display:none;}}
-@media(max-width:640px){.hero h1{font-size:2rem;}.hero-stats{gap:24px;}}
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--p:#0F2D52;--pl:#1565C0;--a:#F59E0B;--ad:#D97706;--g:#16A34A;--bg:#F8FAFF;--card:#fff;--t:#1E293B;--tl:#64748B;--b:#E2E8F0;--r:12px}
+[data-theme=dark]{--bg:#0d1b2a;--card:#1a2d42;--t:#e2e8f0;--tl:#94a3b8;--b:#2a3f56}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--t);transition:background .3s,color .3s}a{text-decoration:none}
+nav{background:var(--p);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:999;box-shadow:0 2px 16px rgba(15,45,82,.4)}
+.nb{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+.nl{width:36px;height:36px;background:var(--a);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--p)}
+.nn{font-weight:700;font-size:1.15rem;color:#fff}.nn span{color:var(--a)}
+.nls{display:flex;align-items:center;gap:2rem;list-style:none}
+.nls a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s}.nls a:hover,.nls a.active{color:var(--a)}
+.np{border:1.5px solid var(--a);color:var(--a)!important;padding:.3rem .9rem;border-radius:20px}
+.nc{display:flex;align-items:center;gap:.75rem}
+.bli{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:.4rem 1.1rem;border-radius:8px;font-size:.875rem;font-weight:500;text-decoration:none}
+.bsu{background:var(--a);color:var(--p);padding:.45rem 1.2rem;border-radius:8px;font-size:.875rem;font-weight:700;text-decoration:none}
+.dt{background:rgba(255,255,255,.1);border:none;color:#fff;width:36px;height:36px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.tb{background:var(--p);border-top:1px solid rgba(255,255,255,.08);padding:.5rem 2rem;display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap}
+.ti{display:flex;align-items:center;gap:.4rem;color:rgba(255,255,255,.75);font-size:.78rem;font-weight:500}.ti i{color:var(--a)}
+.hero{background:linear-gradient(135deg,var(--p) 0%,#0a1e38 40%,var(--pl) 100%);padding:5rem 2rem 7rem;text-align:center;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;bottom:-1px;left:0;right:0;height:80px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%);transition:background .3s}
+.hb{display:inline-flex;align-items:center;gap:.5rem;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--a);padding:.4rem 1.1rem;border-radius:20px;font-size:.82rem;font-weight:600;margin-bottom:1.2rem}
+.hero h1{font-size:3.2rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:.8rem;letter-spacing:-.03em}
+.hero h1 span{color:var(--a)}
+.hs{font-size:1.1rem;color:rgba(255,255,255,.7);max-width:540px;margin:0 auto 2.5rem;line-height:1.6}
+.sw{background:#fff;border-radius:16px;padding:1.2rem;display:flex;align-items:center;gap:.75rem;max-width:740px;margin:0 auto 1.5rem;box-shadow:0 8px 40px rgba(15,45,82,.25);flex-wrap:wrap}
+.sf{display:flex;align-items:center;gap:.5rem;flex:1;min-width:150px;border-right:1.5px solid #e2e8f0;padding-right:.75rem}.sf:last-of-type{border-right:none}
+.sf i{color:var(--pl);font-size:.9rem;flex-shrink:0}
+.sf input,.sf select{border:none;outline:none;font-family:inherit;font-size:.9rem;color:#1E293B;width:100%;background:transparent}
+.sb{background:var(--a);color:var(--p);border:none;padding:.8rem 1.6rem;border-radius:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.5rem;white-space:nowrap;flex-shrink:0}
+.lc{display:flex;align-items:center;justify-content:center;gap:.5rem;color:rgba(255,255,255,.6);font-size:.85rem;position:relative;z-index:1}
+.pd{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{box-shadow:0 0 0 8px transparent}}
+.sbar{max-width:900px;margin:-40px auto 2rem;position:relative;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-radius:16px;box-shadow:0 8px 30px rgba(15,45,82,.12);border:1px solid var(--b);overflow:hidden}
+.si{padding:1.5rem;text-align:center;border-right:1px solid var(--b)}.si:last-child{border-right:none}
+.sn{font-size:2rem;font-weight:800;color:var(--a);line-height:1}
+.sl{font-size:.75rem;color:var(--tl);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem}
+.sec{padding:4rem 2rem}.seci{max-width:1100px;margin:0 auto}
+.sh{text-align:center;margin-bottom:3rem}
+.sh .ey{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--a);margin-bottom:.5rem}
+.sh h2{font-size:2rem;font-weight:800;color:var(--t);margin-bottom:.5rem}
+.sh p{color:var(--tl);font-size:1rem;max-width:500px;margin:0 auto}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.sc{background:var(--card);border-radius:var(--r);padding:1.8rem 1.4rem;text-align:center;box-shadow:0 4px 20px rgba(15,45,82,.08);border:1px solid var(--b);transition:transform .2s}.sc:hover{transform:translateY(-4px)}
+.snum{width:52px;height:52px;background:linear-gradient(135deg,var(--p),var(--pl));border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:var(--a)}
+.sc h3{font-size:1rem;font-weight:700;color:var(--t);margin-bottom:.4rem}
+.sc p{font-size:.85rem;color:var(--tl);line-height:1.5}
+.fs{background:var(--p);padding:4rem 2rem}.fi{max-width:1100px;margin:0 auto}
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.fc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:1.5rem}
+.fi2{width:46px;height:46px;background:rgba(245,158,11,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.1rem;color:var(--a)}
+.fc h3{font-size:1rem;font-weight:700;color:#fff;margin-bottom:.4rem}
+.fc p{font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.5}
+.shl .ey{color:rgba(245,158,11,.8)}.shl h2{color:#fff}.shl p{color:rgba(255,255,255,.65)}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.pc{background:var(--card);border-radius:16px;border:2px solid var(--b);padding:2rem;text-align:center;transition:transform .2s}.pc:hover{transform:translateY(-4px)}
+.pc.pop{border-color:var(--a);position:relative}
+.pb{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--a);color:var(--p);font-size:.72rem;font-weight:800;padding:.3rem 1rem;border-radius:20px;white-space:nowrap}
+.pn{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--tl);margin-bottom:.5rem}
+.pr{font-size:2.8rem;font-weight:800;color:var(--t);line-height:1}
+.pp{font-size:.85rem;color:var(--tl);margin-bottom:1.2rem}
+.pf{list-style:none;text-align:left;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:.5rem}
+.pf li{font-size:.85rem;color:var(--tl);display:flex;align-items:center;gap:.5rem}
+.pf li i.fa-check{color:var(--g)}.pf li i.fa-times{color:var(--b)}
+.pbt{display:block;padding:.8rem;border-radius:10px;font-weight:700;font-size:.9rem;text-align:center}
+.pbt.o{border:2px solid var(--b);color:var(--t)}.pbt.ac{background:var(--a);color:var(--p)}.pbt.dk{background:var(--p);color:#fff}
+.ps{background:linear-gradient(135deg,var(--p) 0%,var(--pl) 100%);padding:4rem 2rem}
+.pi{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:3rem;align-items:center}
+.pt h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:.6rem}
+.pt p{color:rgba(255,255,255,.7);font-size:1rem;line-height:1.6}
+.spb{height:12px;background:rgba(255,255,255,.15);border-radius:6px;overflow:hidden;display:flex}
+.spy{background:#4ade80;height:100%;border-radius:6px 0 0 6px}.spu{background:var(--a);height:100%}
+.spl{display:flex;gap:.5rem;margin-top:.4rem;font-size:.78rem}
+.spla{display:flex;align-items:center;gap:.3rem;color:rgba(255,255,255,.7)}
+.spd{width:8px;height:8px;border-radius:50%}
+.pcard{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:1.8rem}
+.ei{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.08)}.ei:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.eic{width:40px;height:40px;background:rgba(245,158,11,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--a);flex-shrink:0}
+.ein h4{font-size:.9rem;font-weight:700;color:#fff}.ein p{font-size:.8rem;color:rgba(255,255,255,.6)}
+.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.tc{background:var(--card);border-radius:var(--r);padding:1.5rem;box-shadow:0 4px 20px rgba(15,45,82,.08);border:1px solid var(--b)}
+.ts{color:var(--a);font-size:.9rem;margin-bottom:.8rem}
+.tt{font-size:.88rem;color:var(--tl);line-height:1.6;margin-bottom:1rem;font-style:italic}
+.ta{display:flex;align-items:center;gap:.7rem}
+.tav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--pl));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.tn{font-weight:600;font-size:.85rem;color:var(--t)}.tlo{font-size:.75rem;color:var(--tl)}
+footer{background:var(--p);color:rgba(255,255,255,.8);padding:3rem 2rem 1.5rem}
+.fg2{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:2rem}
+.fbn{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:.5rem}.fbn span{color:var(--a)}
+.fbp{font-size:.85rem;line-height:1.6;opacity:.7;margin-bottom:1rem}
+.fsoc{display:flex;gap:.6rem}
+.fsb{width:32px;height:32px;background:rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.65);font-size:.85rem}
+.fc2 h4{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--a);margin-bottom:.8rem}
+.fc2 a{display:block;color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;margin-bottom:.4rem}
+.fbot{max-width:1100px;margin:2rem auto 0;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;font-size:.8rem;opacity:.6;flex-wrap:wrap;gap:.5rem}
+@media(max-width:768px){.hero h1{font-size:2rem}.sbar,.sg,.fg,.tg,.pg{grid-template-columns:1fr}.pi{grid-template-columns:1fr}.fg2{grid-template-columns:1fr 1fr}.nls{display:none}.sw{flex-direction:column}.sf{border-right:none}}
 </style>
 </head>
 <body>
-
-<!-- NAVBAR -->
-<nav class="pe-nav">
-  <div class="pe-nav-inner">
-    <a href="index.html" class="pe-brand">
-      <div class="pe-brand-icon"><i class="fas fa-parking"></i></div>
-      <span class="pe-brand-txt">Park<span>Ease</span></span>
-    </a>
-    <ul class="pe-nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="seetbooking.html">Book a Slot</a></li>
-      <li><a href="vipform.html">VIP Parking</a></li>
-      <li><a href="index-4.html">Contact</a></li>
-      <li><a href="business-partner.html" class="partner-link">🤝 Partner With Us</a></li>
-    </ul>
-    <div class="pe-nav-actions">
-      <a href="login.html" class="pe-btn-login">Log In</a>
-      <a href="signup.html" class="pe-btn-signup">Sign Up Free</a>
-    </div>
-  </div>
+<nav>
+<a href="index.html" class="nb"><div class="nl">P</div><span class="nn">Park<span>Ease</span></span></a>
+<ul class="nls"><li><a href="index.html" class="active">Home</a></li><li><a href="seetbooking.html">Book a Slot</a></li><li><a href="vipform.html">VIP Parking</a></li><li><a href="index-3.html">Pricing</a></li><li><a href="index-4.html">Contact</a></li><li><a href="business-partner.html" class="np">🤝 Partner With Us</a></li></ul>
+<div class="nc"><button class="dt" onclick="toggleDark()" title="Dark mode"><i class="fas fa-moon" id="darkIcon"></i></button><a href="login.html" class="bli">Log In</a><a href="signup.html" class="bsu">Sign Up Free</a></div>
 </nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-eyebrow"><i class="fas fa-map-marker-alt"></i> Bhubaneswar · Puri · Cuttack</div>
-    <h1>Smart Parking,<br><span>Zero Hassle</span></h1>
-    <p class="hero-sub">Find, book and pay for parking in seconds. Real-time slot availability across Odisha's top locations.</p>
-    <div class="hero-btns">
-      <a href="seetbooking.html" class="hero-btn-primary"><i class="fas fa-search-location"></i> Book a Slot Now</a>
-      <a href="vipform.html" class="hero-btn-secondary"><i class="fas fa-star"></i> VIP Parking</a>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="val">24</div><div class="lbl">Live Slots</div></div>
-      <div class="hero-stat"><div class="val">₹40</div><div class="lbl">From/Hour</div></div>
-      <div class="hero-stat"><div class="val">3</div><div class="lbl">Cities</div></div>
-      <div class="hero-stat"><div class="val">4.8★</div><div class="lbl">Rating</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- TRUST BAR -->
-<div class="trust-bar">
-  <div class="trust-bar-inner">
-    <div class="trust-item"><i class="fas fa-shield-alt"></i> 256-bit SSL Secure</div>
-    <div class="trust-item"><i class="fas fa-check-circle"></i> Instant Confirmation</div>
-    <div class="trust-item"><i class="fas fa-undo"></i> Free Cancellation (2 hrs)</div>
-    <div class="trust-item"><i class="fas fa-star"></i> 4.8/5 Rated</div>
-    <div class="trust-item"><i class="fas fa-clock"></i> 24/7 Support</div>
-  </div>
+<div class="tb"><div class="ti"><i class="fas fa-shield-alt"></i>256-bit SSL</div><div class="ti"><i class="fas fa-check-circle"></i>Instant Confirmation</div><div class="ti"><i class="fas fa-undo-alt"></i>Free Cancellation</div><div class="ti"><i class="fas fa-star"></i>4.8/5 Rated</div><div class="ti"><i class="fas fa-clock"></i>24/7 Support</div></div>
+<div class="hero">
+<div class="hb"><i class="fas fa-map-marker-alt"></i> Bhubaneswar · Puri · Cuttack</div>
+<h1>Smart Parking,<br><span>Zero Hassle</span></h1>
+<p class="hs">Find, book and pay for parking in seconds. Real-time slot availability across Odisha's top locations.</p>
+<div class="sw">
+<div class="sf"><i class="fas fa-map-marker-alt"></i><select id="sc"><option value="">Select City</option><option>Bhubaneswar</option><option>Puri</option><option>Cuttack</option></select></div>
+<div class="sf"><i class="fas fa-calendar"></i><input type="date" id="sd"></div>
+<div class="sf"><i class="fas fa-clock"></i><input type="time" id="st"></div>
+<div class="sf"><i class="fas fa-car"></i><select id="sv"><option>Any Vehicle</option><option>4-Wheeler</option><option>2-Wheeler</option><option>EV</option></select></div>
+<button class="sb" onclick="qs()"><i class="fas fa-search"></i> Find Parking</button>
 </div>
-
-<!-- HOW IT WORKS -->
-<section class="section" style="background:#fff;">
-  <div class="section-inner">
-    <div class="section-title">
-      <h2>How ParkEase Works</h2>
-      <p>Book your parking spot in under 60 seconds</p>
-      <div class="bar"></div>
-    </div>
-    <div class="how-grid">
-      <div class="how-card">
-        <div class="how-num">1</div>
-        <h3>Find a Slot</h3>
-        <p>Browse real-time available parking slots near your destination across Bhubaneswar, Puri and Cuttack.</p>
-      </div>
-      <div class="how-card">
-        <div class="how-num">2</div>
-        <h3>Book Instantly</h3>
-        <p>Select your slot, enter your vehicle details, choose check-in and check-out time and confirm your booking.</p>
-      </div>
-      <div class="how-card">
-        <div class="how-num">3</div>
-        <h3>Pay Securely</h3>
-        <p>Pay securely via Razorpay — UPI, card, net banking all accepted. Get an instant digital receipt.</p>
-      </div>
-      <div class="how-card">
-        <div class="how-num">4</div>
-        <h3>Drive & Park</h3>
-        <p>Drive to your pre-booked spot. Your slot is reserved — no more circling and searching for parking.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- WHY CHOOSE -->
-<section class="section">
-  <div class="section-inner">
-    <div class="section-title">
-      <h2>Why Choose ParkEase?</h2>
-      <p>Built for India's parking challenges</p>
-      <div class="bar"></div>
-    </div>
-    <div class="why-grid">
-      <div class="why-card">
-        <div class="why-icon"><i class="fas fa-bolt"></i></div>
-        <h3>Real-Time Availability</h3>
-        <p>See live slot availability updated every second. No surprises — what you see is what you get when you arrive.</p>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><i class="fas fa-rupee-sign"></i></div>
-        <h3>Best Prices Guaranteed</h3>
-        <p>Starting at just ₹40/hr. No hidden charges. Pay only for the time you park. Cancel free up to 2 hours before.</p>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
-        <h3>Safe & Secure</h3>
-        <p>All partner locations have CCTV surveillance, security guards, and are verified by the ParkEase team.</p>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><i class="fas fa-mobile-alt"></i></div>
-        <h3>Easy Digital Booking</h3>
-        <p>Book from any device. Receive SMS and email confirmations with your booking reference instantly.</p>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><i class="fas fa-ev-station"></i></div>
-        <h3>EV Charging Available</h3>
-        <p>Selected partner locations offer EV charging points for electric vehicles at no extra booking cost.</p>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><i class="fas fa-headset"></i></div>
-        <h3>24/7 Customer Support</h3>
-        <p>Got a problem? Our support team is available around the clock via phone, WhatsApp and email.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section class="pricing-section">
-  <div class="pricing-inner">
-    <div class="section-title" style="color:#fff">
-      <h2 style="color:#fff">Simple, Transparent Pricing</h2>
-      <p style="color:rgba(255,255,255,0.7)">No hidden fees. Pay only for what you use.</p>
-      <div class="bar"></div>
-    </div>
-    <div class="pricing-cards">
-      <div class="price-card">
-        <h3>Standard Slot</h3>
-        <div class="price">₹40</div>
-        <div class="per">per hour</div>
-        <ul>
-          <li><i class="fas fa-check"></i> Open / Covered parking</li>
-          <li><i class="fas fa-check"></i> CCTV surveillance</li>
-          <li><i class="fas fa-check"></i> Instant digital receipt</li>
-          <li><i class="fas fa-check"></i> 4-wheeler & 2-wheeler</li>
-          <li><i class="fas fa-check"></i> Free 2-hr cancellation</li>
-        </ul>
-      </div>
-      <div class="price-card featured">
-        <h3>VIP Premium</h3>
-        <div class="price">₹80</div>
-        <div class="per" style="color:var(--gray-600)">per hour</div>
-        <ul>
-          <li><i class="fas fa-check"></i> Covered basement parking</li>
-          <li><i class="fas fa-check"></i> Dedicated attendant</li>
-          <li><i class="fas fa-check"></i> Free vehicle inspection</li>
-          <li><i class="fas fa-check"></i> Priority access lane</li>
-          <li><i class="fas fa-check"></i> Free EV charging</li>
-        </ul>
-      </div>
-      <div class="price-card">
-        <h3>Overnight</h3>
-        <div class="price">₹300</div>
-        <div class="per">per night (12 hrs)</div>
-        <ul>
-          <li><i class="fas fa-check"></i> 6 PM to 6 AM slot</li>
-          <li><i class="fas fa-check"></i> Secure overnight storage</li>
-          <li><i class="fas fa-check"></i> 24/7 security guard</li>
-          <li><i class="fas fa-check"></i> All vehicle types</li>
-          <li><i class="fas fa-check"></i> Morning vehicle check</li>
-        </ul>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:32px">
-      <a href="seetbooking.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--primary);padding:14px 32px;border-radius:var(--radius-md);font-weight:700;font-size:0.95rem;transition:var(--transition)" onmouseover="this.style.background='#D97706'" onmouseout="this.style.background='var(--accent)'">
-        <i class="fas fa-calendar-check"></i> Book Your Slot — Starting ₹40/hr
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- PARTNER CTA -->
-<section class="partner-cta">
-  <div class="partner-cta-inner">
-    <h2>Have a Parking Space?<br><span>Turn It Into Income</span></h2>
-    <p>Join 500+ partners earning 60% on every booking. We handle payments, customers, and support — you provide the space.</p>
-    <div class="partner-stats">
-      <div class="p-stat"><div class="pval">60%</div><div class="plbl">Your Revenue</div></div>
-      <div class="p-stat"><div class="pval">₹45K</div><div class="plbl">Avg Monthly</div></div>
-      <div class="p-stat"><div class="pval">500+</div><div class="plbl">Partners</div></div>
-    </div>
-    <a href="business-partner.html" style="display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:var(--primary);padding:14px 32px;border-radius:var(--radius-md);font-weight:800;font-size:0.95rem;transition:var(--transition)" onmouseover="this.style.background='#D97706'" onmouseout="this.style.background='var(--accent)'">
-      <i class="fas fa-rocket"></i> Register Your Space — It's Free
-    </a>
-    <p style="margin-top:16px;font-size:0.8rem;color:rgba(255,255,255,0.5)">Free registration · No upfront cost · Approved in 24-48 hrs</p>
-  </div>
-</section>
-
-<!-- NEWS / UPDATES -->
-<section class="section" style="background:#fff;">
-  <div class="section-inner">
-    <div class="section-title">
-      <h2>Latest Updates</h2>
-      <p>What's new at ParkEase</p>
-      <div class="bar"></div>
-    </div>
-    <div class="news-grid">
-      <div class="news-card">
-        <div class="news-date"><i class="fas fa-calendar"></i> Apr 2025</div>
-        <h4>New Partner Locations in Puri</h4>
-        <p>5 new partner parking spaces added near Jagannath Temple and Marine Drive, Puri. Book now at ₹40/hr.</p>
-      </div>
-      <div class="news-card">
-        <div class="news-date"><i class="fas fa-calendar"></i> Mar 2025</div>
-        <h4>Razorpay Payment Integration Live</h4>
-        <p>Pay for your parking via UPI, credit/debit cards or net banking. Faster, safer, fully digital payments.</p>
-      </div>
-      <div class="news-card">
-        <div class="news-date"><i class="fas fa-calendar"></i> Feb 2025</div>
-        <h4>Mobile App Coming Soon</h4>
-        <p>We're building a dedicated Android & iOS app with real-time navigation to your booked slot. Stay tuned!</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="pe-footer">
-  <div class="pe-footer-inner">
-    <div class="pe-footer-grid">
-      <div>
-        <div class="pe-footer-brand">Park<span>Ease</span></div>
-        <p class="pe-footer-tagline">Smart parking solutions for Odisha. Book a spot in seconds, drive to it, park. Simple.</p>
-        <div class="social-links">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-linkedin-in"></i></a>
-        </div>
-      </div>
-      <div class="pe-footer-col">
-        <h4>Services</h4>
-        <ul class="pe-footer-links">
-          <li><a href="seetbooking.html">Book a Slot</a></li>
-          <li><a href="vipform.html">VIP Parking</a></li>
-          <li><a href="business-partner.html">Partner With Us</a></li>
-        </ul>
-      </div>
-      <div class="pe-footer-col">
-        <h4>Company</h4>
-        <ul class="pe-footer-links">
-          <li><a href="index.html">About Us</a></li>
-          <li><a href="index-4.html">Contact</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms of Service</a></li>
-        </ul>
-      </div>
-      <div class="pe-footer-col">
-        <h4>Contact</h4>
-        <ul class="pe-footer-links">
-          <li><a href="tel:+919876543210">+91 98765 43210</a></li>
-          <li><a href="mailto:support@parkease.in">support@parkease.in</a></li>
-          <li><a href="#">Bhubaneswar, Odisha</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="pe-footer-bottom">
-      <span>&copy; 2025 ParkEase Smart Parking. All rights reserved.</span>
-      <span>Made with ❤️ for Odisha &nbsp;|&nbsp; <a href="business-partner.html">Become a Partner</a></span>
-    </div>
-  </div>
+<div class="lc"><div class="pd"></div><span id="lct">Loading...</span></div>
+</div>
+<div class="sbar">
+<div class="si"><div class="sn" id="ss">24</div><div class="sl">Live Slots</div></div>
+<div class="si"><div class="sn">₹40</div><div class="sl">From/Hour</div></div>
+<div class="si"><div class="sn" id="sb2">0</div><div class="sl">Bookings Today</div></div>
+<div class="si"><div class="sn">4.8★</div><div class="sl">Rating</div></div>
+</div>
+<div class="sec"><div class="seci"><div class="sh"><div class="ey">Simple Process</div><h2>Park in 4 Easy Steps</h2><p>From search to confirmation in under 60 seconds</p></div>
+<div class="sg"><div class="sc"><div class="snum"><i class="fas fa-search"></i></div><h3>Find a Spot</h3><p>Search by city, date and time to see real-time availability near you.</p></div><div class="sc"><div class="snum"><i class="fas fa-hand-pointer"></i></div><h3>Select a Slot</h3><p>Pick your slot on the interactive parking grid.</p></div><div class="sc"><div class="snum"><i class="fas fa-credit-card"></i></div><h3>Pay Securely</h3><p>Pay via UPI, card or wallet through Razorpay checkout.</p></div><div class="sc"><div class="snum"><i class="fas fa-check-circle"></i></div><h3>Park &amp; Go</h3><p>Get instant confirmation. Show booking ID at the entrance.</p></div></div></div></div>
+<div class="fs"><div class="fi"><div class="sh shl"><div class="ey">Why ParkEase</div><h2>Everything You Need</h2><p>Built for Odisha's urban mobility needs</p></div>
+<div class="fg"><div class="fc"><div class="fi2"><i class="fas fa-bolt"></i></div><h3>Real-time Availability</h3><p>Live slot data updated every 30 seconds.</p></div><div class="fc"><div class="fi2"><i class="fas fa-shield-alt"></i></div><h3>Bank-Level Security</h3><p>256-bit SSL on all transactions. Always safe.</p></div><div class="fc"><div class="fi2"><i class="fas fa-undo-alt"></i></div><h3>Free Cancellation</h3><p>Cancel up to 2 hours before arrival. Full refund.</p></div><div class="fc"><div class="fi2"><i class="fas fa-video"></i></div><h3>CCTV Surveillance</h3><p>24/7 monitored parking at every location.</p></div><div class="fc"><div class="fi2"><i class="fas fa-plug"></i></div><h3>EV Charging</h3><p>Dedicated EV bays with fast charging.</p></div><div class="fc"><div class="fi2"><i class="fas fa-headset"></i></div><h3>24/7 Support</h3><p>Phone, WhatsApp and email always available.</p></div></div></div></div>
+<div class="sec"><div class="seci"><div class="sh"><div class="ey">Transparent Pricing</div><h2>Simple, Honest Plans</h2><p>No hidden fees. Start free today.</p></div>
+<div class="pg"><div class="pc"><div class="pn">Basic</div><div class="pr">₹50</div><div class="pp">/day</div><ul class="pf"><li><i class="fas fa-check"></i>1 Parking Slot</li><li><i class="fas fa-check"></i>Standard Zone</li><li><i class="fas fa-check"></i>CCTV Monitored</li><li><i class="fas fa-times"></i>VIP Access</li></ul><a href="index-3.html" class="pbt o">Get Started</a></div>
+<div class="pc pop"><div class="pb">⭐ Most Popular</div><div class="pn">Standard</div><div class="pr">₹120</div><div class="pp">/day</div><ul class="pf"><li><i class="fas fa-check"></i>2 Parking Slots</li><li><i class="fas fa-check"></i>VIP Zone Access</li><li><i class="fas fa-check"></i>CCTV + Attendant</li><li><i class="fas fa-check"></i>Booking Modification</li></ul><a href="seetbooking.html" class="pbt ac">Book Now</a></div>
+<div class="pc"><div class="pn">Premium</div><div class="pr">₹250</div><div class="pp">/day</div><ul class="pf"><li><i class="fas fa-check"></i>5 Slots — All Zones</li><li><i class="fas fa-check"></i>EV Charging</li><li><i class="fas fa-check"></i>Valet Service</li><li><i class="fas fa-check"></i>40% Discount</li></ul><a href="vipform.html" class="pbt dk">Go Premium</a></div></div>
+<div style="text-align:center;margin-top:1.5rem"><a href="index-3.html" style="color:var(--pl);font-size:.9rem;font-weight:600"><i class="fas fa-table"></i> Compare all plans →</a></div></div></div>
+<div class="ps"><div class="pi"><div class="pt"><h2>Got a Parking Space?<br>Start Earning Today.</h2><p>List your space on ParkEase and earn passive income.</p><div style="margin-top:1rem"><div class="spb"><div class="spy" style="width:60%"></div><div class="spu" style="width:40%"></div></div><div class="spl"><span class="spla"><span class="spd" style="background:#4ade80"></span>You earn 60%</span><span class="spla"><span class="spd" style="background:var(--a)"></span>ParkEase 40%</span></div></div><a href="business-partner.html" style="display:inline-flex;align-items:center;gap:.5rem;background:var(--a);color:var(--p);padding:.85rem 1.8rem;border-radius:10px;font-weight:700;margin-top:1.5rem"><i class="fas fa-rocket"></i> Register Your Space</a></div>
+<div class="pcard"><div class="ei"><div class="eic"><i class="fas fa-rupee-sign"></i></div><div class="ein"><h4>Avg. Monthly Earnings</h4><p>₹45,000+ for 10-slot operators</p></div></div><div class="ei"><div class="eic"><i class="fas fa-users"></i></div><div class="ein"><h4>500+ Active Partners</h4><p>Across Bhubaneswar, Puri &amp; Cuttack</p></div></div><div class="ei"><div class="eic"><i class="fas fa-headset"></i></div><div class="ein"><h4>Dedicated Support</h4><p>24/7 partner assistance team</p></div></div></div></div></div>
+<div class="sec"><div class="seci"><div class="sh"><div class="ey">Customer Reviews</div><h2>Loved by Parkers</h2><p>Real reviews from customers in Odisha</p></div>
+<div class="tg"><div class="tc"><div class="ts">★★★★★</div><p class="tt">"Finally, a parking app that works in Bhubaneswar! Booked in under 2 minutes."</p><div class="ta"><div class="tav">R</div><div><div class="tn">Rajesh Mohanty</div><div class="tlo">Bhubaneswar</div></div></div></div><div class="tc"><div class="ts">★★★★★</div><p class="tt">"Got a slot 200m from the beach in Puri for ₹40/hr. Saved so much time!"</p><div class="ta"><div class="tav">S</div><div><div class="tn">Sunita Panda</div><div class="tlo">Cuttack</div></div></div></div><div class="tc"><div class="ts">★★★★☆</div><p class="tt">"Earning ₹35,000 extra monthly from my warehouse space. Setup took less than a day!"</p><div class="ta"><div class="tav">A</div><div><div class="tn">Ankit Sharma</div><div class="tlo">Business Partner</div></div></div></div></div></div></div>
+<footer>
+<div class="fg2"><div><div class="fbn">Park<span>Ease</span></div><p class="fbp">Smart parking solutions for Odisha.</p><div class="fsoc"><a href="#" class="fsb"><i class="fab fa-facebook-f"></i></a><a href="#" class="fsb"><i class="fab fa-instagram"></i></a><a href="#" class="fsb"><i class="fab fa-twitter"></i></a></div></div>
+<div class="fc2"><h4>Services</h4><a href="seetbooking.html">Book a Slot</a><a href="vipform.html">VIP Parking</a><a href="index-3.html">Pricing</a><a href="business-partner.html">Partner With Us</a></div>
+<div class="fc2"><h4>Company</h4><a href="index.html">About Us</a><a href="index-4.html">Contact</a></div>
+<div class="fc2"><h4>Contact</h4><a href="tel:+919876543210">+91 98765 43210</a><a href="mailto:support@parkease.in">support@parkease.in</a></div></div>
+<div class="fbot"><span>© 2025 ParkEase. All rights reserved.</span><span>Made with ❤️ in Odisha</span><a href="business-partner.html" style="color:var(--a)">Become a Partner</a></div>
 </footer>
-
+<script>
+const SB=supabase.createClient("https://xpziztrwufkqndzeguyj.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM");
+function toggleDark(){const d=document.documentElement.getAttribute("data-theme")==="dark";document.documentElement.setAttribute("data-theme",d?"light":"dark");document.getElementById("darkIcon").className=d?"fas fa-moon":"fas fa-sun";localStorage.setItem("pe-theme",d?"light":"dark");}
+(function(){const t=localStorage.getItem("pe-theme");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");const ic=document.getElementById("darkIcon");if(ic)ic.className="fas fa-sun";}})();
+document.getElementById("sd").valueAsDate=new Date();
+function qs(){const c=document.getElementById("sc").value,d=document.getElementById("sd").value,t=document.getElementById("st").value,v=document.getElementById("sv").value;let u="seetbooking.html?";if(c)u+="city="+encodeURIComponent(c)+"&";if(d)u+="date="+d+"&";if(t)u+="time="+t+"&";if(v&&v!="Any Vehicle")u+="type="+encodeURIComponent(v);window.location.href=u;}
+async function loadStats(){try{const today=new Date().toISOString().split("T")[0];const{data}=await SB.from("bookings").select("id").eq("booking_date",today);const n=(data||[]).length,av=Math.max(0,24-n);document.getElementById("ss").textContent=av;document.getElementById("sb2").textContent=n;document.getElementById("lct").textContent=(1247+n).toLocaleString("en-IN")+" slots booked this month • "+av+" available now";}catch(e){document.getElementById("lct").textContent="Real-time slots available • Book instantly";}}
+loadStats();setInterval(loadStats,30000);
+</script>
 </body>
 </html>
