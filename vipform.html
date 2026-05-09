@@ -1,1 +1,178 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Book a Slot - ParkEase</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>*{margin:0;padding:0;box-sizing:border-box;}:root{--primary:#1a3c5e;--accent:#f5a623;}body{font-family:'Segoe UI',Arial,sans-serif;color:#333;background:#f0f4f8;}nav{background:var(--primary);padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:99;}.logo{color:var(--accent);font-size:1.5rem;font-weight:800;text-decoration:none;padding:14px 0;}.logo span{color:#fff;}.nav-back{color:#cde;text-decoration:none;font-size:.9rem;padding:8px 14px;border:1px solid rgba(255,255,255,.3);border-radius:4px;}.booking-wrap{max-width:1100px;margin:0 auto;padding:40px 20px;display:grid;grid-template-columns:1.5fr 1fr;gap:40px;}.form-card{background:#fff;border-radius:14px;padding:36px;box-shadow:0 4px 20px rgba(0,0,0,.1);}.form-card h2{color:var(--primary);margin-bottom:24px;font-size:1.4rem;}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}.form-group{margin-bottom:18px;}.form-group label{display:block;font-size:.83rem;color:#666;margin-bottom:6px;font-weight:600;text-transform:uppercase;}.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:.95rem;font-family:inherit;}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);}.form-group textarea{height:100px;resize:vertical;}.time-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}.btn-submit{padding:13px 36px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:1rem;font-weight:700;cursor:pointer;}.btn-submit:hover{background:#d48a10;}.btn-slot{padding:8px 20px;background:var(--primary);color:#fff;border:none;border-radius:4px;font-size:.85rem;cursor:pointer;margin-left:10px;}.info-card{background:#fff;border-radius:14px;padding:28px;box-shadow:0 4px 20px rgba(0,0,0,.1);}.info-card h3{color:var(--primary);margin-bottom:16px;}.info-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0;}.info-item i{color:var(--accent);width:22px;}.info-item span{font-size:.9rem;color:#555;}.success-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;align-items:center;justify-content:center;}.success-modal.open{display:flex;}.success-box{background:#fff;border-radius:14px;padding:40px;text-align:center;max-width:400px;width:90%;}.success-box i{font-size:3.5rem;color:#2ecc71;margin-bottom:16px;}.success-box h3{color:var(--primary);margin-bottom:8px;}.success-box p{color:#666;font-size:.9rem;margin-bottom:20px;}.success-box a{padding:10px 24px;background:var(--accent);color:#fff;border-radius:5px;text-decoration:none;font-weight:700;}@media(max-width:768px){.booking-wrap{grid-template-columns:1fr;}.form-row,.time-row{grid-template-columns:1fr;}}</style></head><body><nav><a class="logo" href="index.html">Park<span>Ease</span></a><a href="index.html" class="nav-back"><i class="fa fa-arrow-left"></i> Back to Home</a></nav><div class="booking-wrap"><div class="form-card"><h2><i class="fa fa-calendar-plus" style="color:var(--accent)"></i> Book Your Parking Slot</h2><form onsubmit="submitBooking(event)"><div class="form-row"><div class="form-group"><label>Full Name *</label><input type="text" required placeholder="Your full name"></div><div class="form-group"><label>Email *</label><input type="email" required placeholder="you@example.com"></div></div><div class="form-row"><div class="form-group"><label>Phone *</label><input type="tel" required placeholder="+91 XXXXX XXXXX"></div><div class="form-group"><label>City *</label><select required><option value="">Select city</option><option>Bhubaneswar</option><option>Puri</option><option>Cuttack</option></select></div></div><div class="form-row"><div class="form-group"><label>Date *</label><input type="date" required></div><div class="form-group"><label>Parking Zone *</label><select required><option value="">Select zone</option><option>Zone 1 - Standard</option><option>Zone 4 - VIP (Puri)</option><option>Zone 7 - VIP (Bhubaneswar)</option></select></div></div><div class="time-row"><div class="form-group"><label>Check-In Time *</label><input type="time" required></div><div class="form-group"><label>Check-Out Time *</label><input type="time" required></div></div><div class="form-row"><div class="form-group"><label>Number of Slots</label><select><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div><div class="form-group"><label>Vehicle Type</label><select><option>4-Seater Car</option><option>6-Seater Car</option><option>8-Seater SUV</option><option>Motorcycle</option><option>Electric Vehicle</option></select></div></div><div class="form-group"><label>Special Requests</label><textarea placeholder="Any special requirements..."></textarea></div><button type="submit" class="btn-submit"><i class="fa fa-check"></i> Confirm Booking</button><button type="button" class="btn-slot" onclick="window.location.href='seetbooking.html'"><i class="fa fa-map"></i> View Slot Map</button></form></div><div class="info-card"><h3><i class="fa fa-info-circle" style="color:var(--accent)"></i> Booking Info</h3><div class="info-item"><i class="fa fa-check-circle"></i><span>Instant confirmation via email</span></div><div class="info-item"><i class="fa fa-clock"></i><span>Free cancellation up to 2 hours before</span></div><div class="info-item"><i class="fa fa-shield-halved"></i><span>24/7 CCTV surveillance</span></div><div class="info-item"><i class="fa fa-car"></i><span>Covered and open parking available</span></div><div class="info-item"><i class="fa fa-bolt"></i><span>EV charging at select locations</span></div><div class="info-item"><i class="fa fa-headset"></i><span>Live support: +91 98765 43210</span></div><div style="margin-top:24px;background:#fffbf0;border-left:3px solid var(--accent);padding:14px;border-radius:4px;font-size:.88rem;color:#666;"><strong>VIP Terms:</strong> VIP holders get priority access, dedicated attendant, and free vehicle inspection.</div></div></div><div class="success-modal" id="successModal"><div class="success-box"><i class="fa fa-check-circle"></i><h3>Booking Confirmed!</h3><p>Your parking slot has been reserved. A confirmation will be sent to your email.</p><a href="index.html">Back to Home</a></div></div><script>function submitBooking(e){e.preventDefault();document.getElementById('successModal').classList.add('open');}document.getElementById('successModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Slot - ParkEase</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; min-height: 100vh; }
+    nav { background: #1a2942; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .nav-brand { font-size: 1.4rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .nav-brand span { color: #f5a623; }
+    .back-btn { border: 1.5px solid #c8d6e5; color: #c8d6e5; background: transparent; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+    .back-btn:hover { border-color: #f5a623; color: #f5a623; }
+    .main { max-width: 1100px; margin: 36px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+    .form-card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+    .form-card h2 { font-size: 1.3rem; font-weight: 800; color: #1a2942; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .form-card h2 i { color: #f5a623; }
+    .form-card > p { color: #888; font-size: 0.88rem; margin-bottom: 24px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group label { font-size: 0.78rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group input, .form-group select, .form-group textarea { padding: 11px 13px; border: 1.5px solid #e2e8f0; border-radius: 9px; font-size: 0.92rem; color: #1a2942; background: #f8fafc; outline: none; transition: border-color 0.2s; font-family: inherit; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #f5a623; background: white; }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .btn-submit { width: 100%; background: linear-gradient(135deg, #f5a623, #e8941a); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
+    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .info-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.07); height: fit-content; }
+    .info-card h3 { font-size: 1rem; font-weight: 700; color: #1a2942; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .info-card h3 i { color: #f5a623; }
+    .info-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f0f4f8; font-size: 0.84rem; color: #555; }
+    .info-item:last-of-type { border-bottom: none; }
+    .info-item i { color: #f5a623; margin-top: 1px; flex-shrink: 0; }
+    .vip-box { background: #fff8e1; border: 1.5px solid #f5a623; border-radius: 10px; padding: 14px; margin-top: 18px; font-size: 0.83rem; color: #7a5200; line-height: 1.6; }
+    .vip-box strong { color: #f5a623; }
+    .success-toast { display: none; background: #e8f5e9; border: 1.5px solid #43a047; border-radius: 10px; padding: 14px; margin-bottom: 18px; align-items: center; gap: 10px; color: #2e7d32; font-weight: 600; font-size: 0.88rem; }
+    .success-toast.show { display: flex; }
+    .db-badge { background: #e8f5e9; border: 1px solid #43a047; border-radius: 6px; padding: 6px 12px; font-size: 0.76rem; color: #2e7d32; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 18px; }
+    @media (max-width: 800px) { .main { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-brand">Park<span>Ease</span></a>
+  <a href="index.html" class="back-btn"><i class="fa fa-arrow-left"></i> Back to Home</a>
+</nav>
+
+<div class="main">
+  <div class="form-card">
+    <h2><i class="fa fa-calendar-plus"></i> Book Your Parking Slot</h2>
+    <p>Fill in your details to reserve a slot. Your booking will be saved to our database instantly.</p>
+    <div class="db-badge"><i class="fa fa-database"></i> Connected to live database</div>
+
+    <div class="success-toast" id="successToast">
+      <i class="fa fa-check-circle fa-lg"></i>
+      <div><strong>Booking confirmed!</strong> Ref: <span id="bookingRef" style="font-family:monospace;">--</span><br>Your slot has been saved to our database.</div>
+    </div>
+
+    <form id="bookingForm" onsubmit="submitBooking(event)">
+      <div class="form-row">
+        <div class="form-group"><label>Full Name *</label><input type="text" id="fullName" placeholder="Your full name" required /></div>
+        <div class="form-group"><label>Email *</label><input type="email" id="email" placeholder="you@example.com" required /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone *</label><input type="tel" id="phone" placeholder="+91 XXXXX XXXXX" required /></div>
+        <div class="form-group"><label>City / Zone *</label>
+          <select id="city" required>
+            <option value="">Select city</option>
+            <option>Zone A - Bhubaneswar Central</option>
+            <option>Zone B - Puri Beach</option>
+            <option>Zone C - Cuttack Silver City</option>
+            <option>Zone D - BBSR Airport</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Date *</label><input type="date" id="date" required /></div>
+        <div class="form-group"><label>Parking Zone *</label>
+          <select id="parkingZone" required>
+            <option value="">Select zone</option>
+            <option>VIP Zone 1</option><option>VIP Zone 4</option><option>VIP Zone 7</option><option>Standard A</option><option>Standard B</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Check-In Time *</label><input type="time" id="checkIn" required /></div>
+        <div class="form-group"><label>Check-Out Time *</label><input type="time" id="checkOut" required /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Number of Slots</label>
+          <select id="numSlots"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+        </div>
+        <div class="form-group"><label>Vehicle Type</label>
+          <select id="vehicleType"><option>4-Seater Car</option><option>2-Wheeler / Bike</option><option>SUV / Large</option><option>Electric Vehicle</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Special Requests</label><textarea id="notes" placeholder="Any special requirements..."></textarea></div>
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <i class="fa fa-check-circle"></i> Confirm Booking
+      </button>
+    </form>
+  </div>
+
+  <div class="info-card">
+    <h3><i class="fa fa-info-circle"></i> Booking Info</h3>
+    <div class="info-item"><i class="fa fa-check-circle"></i> Instant confirmation via email</div>
+    <div class="info-item"><i class="fa fa-clock"></i> Free cancellation up to 2 hours before</div>
+    <div class="info-item"><i class="fa fa-shield-alt"></i> 24/7 CCTV surveillance</div>
+    <div class="info-item"><i class="fa fa-car"></i> Covered and open parking available</div>
+    <div class="info-item"><i class="fa fa-bolt"></i> EV charging at select locations</div>
+    <div class="info-item"><i class="fa fa-headset"></i> Live support: +91 98765 43210</div>
+    <div class="info-item"><i class="fa fa-rupee-sign"></i> Rate: &#8377;40/hr | Overnight: &#8377;300</div>
+    <div class="vip-box">
+      <strong>VIP Terms:</strong> VIP holders get priority access, dedicated attendant, and free vehicle inspection.
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://xpziztrwufkqndzeguyj.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  document.getElementById('date').valueAsDate = new Date();
+
+  async function submitBooking(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving booking...';
+
+    const fullName = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const city = document.getElementById('city').value;
+    const date = document.getElementById('date').value;
+    const zone = document.getElementById('parkingZone').value;
+    const checkIn = document.getElementById('checkIn').value;
+    const checkOut = document.getElementById('checkOut').value;
+    const vehicleType = document.getElementById('vehicleType').value;
+    const notes = document.getElementById('notes').value;
+    const bookingRef = 'PKE-' + Date.now().toString().slice(-6);
+
+    const loggedIn = JSON.parse(localStorage.getItem('parkease_logged_in') || '{}');
+
+    const { data, error } = await sb.from('bookings').insert([{
+      booking_ref: bookingRef,
+      user_id: loggedIn.id && loggedIn.id !== 'demo' ? loggedIn.id : null,
+      user_name: fullName,
+      user_email: email,
+      user_phone: phone,
+      vehicle_type: vehicleType,
+      zone: city + ' / ' + zone,
+      booking_date: date,
+      check_in: checkIn || '00:00',
+      check_out: checkOut || '00:00',
+      status: 'confirmed'
+    }]);
+
+    if (error) {
+      alert('Booking error: ' + error.message);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-check-circle"></i> Confirm Booking';
+    } else {
+      document.getElementById('bookingRef').textContent = bookingRef;
+      document.getElementById('successToast').classList.add('show');
+      document.getElementById('bookingForm').reset();
+      document.getElementById('successToast').scrollIntoView({behavior: 'smooth', block: 'center'});
+      btn.innerHTML = '<i class="fa fa-check-circle"></i> Confirm Booking';
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
