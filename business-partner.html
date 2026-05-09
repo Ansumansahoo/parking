@@ -6,6 +6,10 @@
 <title>Partner With Us - ParkEase Business</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{--primary:#0F2D52;--primary-light:#1565C0;--accent:#F59E0B;--accent-dark:#D97706;}
+body{font-family:'Inter',system-ui,sans-serif!important;-webkit-font-smoothing:antialiased;}
+
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f4f8;color:#333}
 :root{--primary:#1a73e8;--dark:#0d1b2a;--accent:#f0a500;--green:#28a745;--red:#dc3545;--light:#f8f9fa}
@@ -566,6 +570,636 @@ footer a{color:var(--accent);text-decoration:none}
 <!-- FOOTER -->
 <footer>
   <p>&copy; 2025 ParkEase Smart Parking. All rights reserved. | <a href="index-4.html">Contact Us</a> | <a href="business-partner.html">Partner With Us</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+const SUPABASE_URL = 'https://xpziztrwufkqndzeguyj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentStep = 1;
+const totalSteps = 5;
+
+// ─── Load Active Partners ───
+async function loadPartners() {
+  const grid = document.getElementById('partnersGrid');
+  try {
+    const { data, error } = await supabase
+      .from('business_partners')
+      .select('*')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      grid.innerHTML = '<div style="text-align:center;padding:40px;color:#888;grid-column:1/-1"><i class="fas fa-building" style="font-size:40px;color:#ccc"></i><p style="margin-top:10px">No partners listed yet. Be the first!</p></div>';
+      return;
+    }
+    grid.innerHTML = data.map(p => {
+      const amenities = (p.amenities || '').split(',').filter(Boolean);
+      const occ = Math.round(((p.total_slots - p.available_slots) / p.total_slots) * 100);
+      return `
+      <div class="partner-card">
+        <div class="partner-card-header">
+          <div>
+            <div class="partner-name">${p.business_name}</div>
+            <div class="partner-location"><i class="fas fa-map-marker-alt"></i> ${p.address}, ${p.city}</div>
+          </div>
+          <span class="partner-badge">✓ Verified</span>
+        </div>
+        <div class="partner-stats">
+          <div class="p-stat"><div class="val">${p.total_slots}</div><div class="lbl">Total</div></div>
+          <div class="p-stat"><div class="val" style="color:var(--green)">${p.available_slots}</div><div class="lbl">Available</div></div>
+          <div class="p-stat"><div class="val">₹${p.price_per_hr}</div><div class="lbl">Per Hour</div></div>
+        </div>
+        <div style="margin:10px 0;font-size:13px;color:#555">
+          <i class="fas fa-clock" style="color:var(--primary)"></i> ${p.is_24hr ? '24 Hours' : p.opening_time + ' – ' + p.closing_time}
+          &nbsp;&nbsp;<i class="fas fa-warehouse" style="color:var(--primary)"></i> ${p.parking_type}
+        </div>
+        <div class="partner-amenities">
+          ${amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('')}
+        </div>
+        <div style="margin-top:12px;font-size:13px;color:#888;line-height:1.5">${(p.description||'').substring(0,120)}${p.description && p.description.length > 120 ? '...' : ''}</div>
+        <button class="book-btn" onclick="window.location.href='seetbooking.html'">
+          <i class="fas fa-calendar-check"></i> Book a Slot Here
+        </button>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    grid.innerHTML = '<div style="text-align:center;padding:30px;color:#888;grid-column:1/-1"><i class="fas fa-exclamation-circle" style="color:#f0a500"></i> Could not load partners. Please try again.</div>';
+  }
+}
+
+// ─── Multi-step form navigation ───
+function nextStep(step) {
+  if (!validateStep(step)) return;
+  document.getElementById('step' + step).classList.remove('active');
+  document.getElementById('pstep' + step).classList.remove('active');
+  document.getElementById('pstep' + step).classList.add('done');
+  currentStep = step + 1;
+  document.getElementById('step' + currentStep).classList.add('active');
+  document.getElementById('pstep' + currentStep).classList.add('active');
+  window.scrollTo({top: document.getElementById('register').offsetTop - 20, behavior:'smooth'});
+}
+
+function prevStep(step) {
+  document.getElementById('step' + step).classList.remove('active');
+  document.getElementById('pstep' + step).classList.remove('active');
+  currentStep = step - 1;
+  document.getElementById('pstep' + currentStep).classList.remove('done');
+  document.getElementById('pstep' + currentStep).classList.add('active');
+  document.getElementById('step' + currentStep).classList.add('active');
+  window.scrollTo({top: document.getElementById('register').offsetTop - 20, behavior:'smooth'});
+}
+
+function validateStep(step) {
+  const required = { 
+    1: ['businessName','ownerName','partnerEmail','partnerPhone'],
+    2: ['address','city','state','pincode'],
+    3: ['totalSlots','pricePerHr'],
+    4: ['bankAccount','ifscCode','panNumber']
+  };
+  const fields = required[step] || [];
+  for (const id of fields) {
+    const el = document.getElementById(id);
+    if (!el || !el.value.trim()) {
+      el && el.focus();
+      el && (el.style.borderColor = 'var(--red)');
+      setTimeout(() => el && (el.style.borderColor = ''), 2000);
+      alert('Please fill in all required fields.');
+      return false;
+    }
+  }
+  if (step === 1) {
+    const email = document.getElementById('partnerEmail').value;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return false; }
+    const phone = document.getElementById('partnerPhone').value;
+    if (!/^[0-9]{10}$/.test(phone)) { alert('Please enter a valid 10-digit phone number.'); return false; }
+  }
+  if (step === 4) {
+    const pan = document.getElementById('panNumber').value.toUpperCase();
+    if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan)) { alert('Please enter a valid PAN number (e.g., ABCDE1234F)'); return false; }
+  }
+  return true;
+}
+
+function updateCheck(el) {
+  el.parentElement.classList.toggle('checked', el.checked);
+}
+
+function toggle24hr() {
+  const is24 = document.getElementById('is24hr').checked;
+  document.getElementById('openingTime').disabled = is24;
+  document.getElementById('closingTime').disabled = is24;
+  if (is24) { document.getElementById('openingTime').value = '00:00'; document.getElementById('closingTime').value = '23:59'; }
+}
+
+function updatePricingPreview() {
+  const slots = parseInt(document.getElementById('totalSlots').value) || 0;
+  const price = parseFloat(document.getElementById('pricePerHr').value) || 0;
+  const preview = document.getElementById('pricingPreview');
+  if (slots > 0 && price > 0) {
+    preview.style.display = 'block';
+    const gross = slots * price * 8;
+    const platform = gross * 0.40;
+    const partner = gross * 0.60;
+    const monthly = partner * 25;
+    document.getElementById('previewRate').textContent = '₹' + price + '/hr';
+    document.getElementById('previewGross').textContent = '₹' + gross.toLocaleString('en-IN');
+    document.getElementById('previewPlatform').textContent = '₹' + platform.toLocaleString('en-IN');
+    document.getElementById('previewPartner').textContent = '₹' + partner.toLocaleString('en-IN');
+    document.getElementById('previewMonthly').textContent = '₹' + monthly.toLocaleString('en-IN');
+  } else { preview.style.display = 'none'; }
+}
+
+// ─── Generate Partner Ref ───
+function genPartnerRef() {
+  const dt = new Date();
+  return 'PTNER-' + dt.getFullYear().toString().slice(-2) + String(dt.getMonth()+1).padStart(2,'0') + '-' + Math.random().toString(36).substring(2,7).toUpperCase();
+}
+
+// ─── Submit Form ───
+async function submitPartnerForm() {
+  if (!document.getElementById('agreeTerms').checked) {
+    alert('Please read and accept the Partner Agreement to proceed.');
+    return;
+  }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+  const slotTypes = Array.from(document.querySelectorAll('input[name="slotType"]:checked')).map(e => e.value).join(',');
+  const amenities = Array.from(document.querySelectorAll('input[name="amenity"]:checked')).map(e => e.value).join(',');
+  const partnerRef = genPartnerRef();
+  const partnerData = {
+    partner_ref: partnerRef,
+    business_name: document.getElementById('businessName').value.trim(),
+    owner_name: document.getElementById('ownerName').value.trim(),
+    email: document.getElementById('partnerEmail').value.trim().toLowerCase(),
+    phone: document.getElementById('partnerPhone').value.trim(),
+    address: document.getElementById('address').value.trim(),
+    city: document.getElementById('city').value.trim(),
+    state: document.getElementById('state').value,
+    pincode: document.getElementById('pincode').value.trim(),
+    total_slots: parseInt(document.getElementById('totalSlots').value),
+    available_slots: parseInt(document.getElementById('totalSlots').value),
+    price_per_hr: parseFloat(document.getElementById('pricePerHr').value),
+    slot_types: slotTypes || 'Car',
+    amenities: amenities,
+    opening_time: document.getElementById('openingTime').value,
+    closing_time: document.getElementById('closingTime').value,
+    is_24hr: document.getElementById('is24hr').checked,
+    parking_type: document.getElementById('parkingType').value,
+    description: document.getElementById('description').value.trim(),
+    bank_account: document.getElementById('bankAccount').value.trim(),
+    ifsc_code: document.getElementById('ifscCode').value.trim().toUpperCase(),
+    pan_number: document.getElementById('panNumber').value.trim().toUpperCase(),
+    gst_number: document.getElementById('gstNumber').value.trim(),
+    commission_rate: 40.00,
+    agreement_accepted: true,
+    status: 'pending'
+  };
+  try {
+    const { data, error } = await supabase.from('business_partners').insert([partnerData]).select();
+    if (error) throw error;
+    document.getElementById('partnerRefDisplay').textContent = partnerRef;
+    document.getElementById('formCard').querySelector('.form-header').style.display = 'none';
+    document.getElementById('formCard').querySelector('.form-body').style.display = 'none';
+    document.getElementById('successScreen').classList.add('show');
+    window.scrollTo({top: document.getElementById('register').offsetTop, behavior:'smooth'});
+  } catch(e) {
+    alert('Registration failed: ' + (e.message || 'Please try again.'));
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-rocket"></i> Submit Registration';
+  }
+}
+
+// Smooth scroll for Register button
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('a[href="#register"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.getElementById('register').scrollIntoView({behavior:'smooth'});
+    });
+  });
+  loadPartners();
+});
+</script>
+</body>
+</html><nav style="background:#0F2D52;height:64px;display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,0.25)">
+  <div style="max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;">
+    <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-0.5px;font-family:'Inter',system-ui,sans-serif">
+      <div style="width:36px;height:36px;background:#F59E0B;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#0F2D52;font-size:16px"><i class="fas fa-parking"></i></div>
+      Park<span style="color:#F59E0B">Ease</span>
+    </a>
+    <ul style="display:flex;list-style:none;gap:4px;align-items:center">
+      <li><a href="index.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.875rem;font-weight:500;padding:7px 14px;border-radius:6px;transition:all 0.2s;font-family:'Inter',system-ui,sans-serif">Home</a></li>
+      <li><a href="seetbooking.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.875rem;font-weight:500;padding:7px 14px;border-radius:6px;transition:all 0.2s;font-family:'Inter',system-ui,sans-serif">Book a Slot</a></li>
+      <li><a href="vipform.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.875rem;font-weight:500;padding:7px 14px;border-radius:6px;transition:all 0.2s;font-family:'Inter',system-ui,sans-serif">VIP Parking</a></li>
+      <li><a href="index-4.html" style="color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.875rem;font-weight:500;padding:7px 14px;border-radius:6px;transition:all 0.2s;font-family:'Inter',system-ui,sans-serif">Contact</a></li>
+      <li><a href="business-partner.html" style="color:#F59E0B;font-weight:600;text-decoration:none;font-size:0.875rem;padding:7px 14px;border-radius:999px;border:1px solid rgba(245,158,11,0.4);font-family:'Inter',system-ui,sans-serif">🤝 Partner With Us</a></li>
+    </ul>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a href="login.html" style="color:rgba(255,255,255,0.85);background:transparent;border:1.5px solid rgba(255,255,255,0.3);padding:7px 16px;border-radius:999px;font-size:0.85rem;font-weight:600;text-decoration:none;font-family:'Inter',system-ui,sans-serif">Log In</a>
+      <a href="signup.html" style="background:#F59E0B;color:#0F2D52;border:none;padding:8px 18px;border-radius:999px;font-size:0.85rem;font-weight:700;text-decoration:none;font-family:'Inter',system-ui,sans-serif">Sign Up Free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><i class="fas fa-handshake"></i> &nbsp;Business Partnership Program</div>
+  <h1>Turn Your <span>Empty Space</span><br>Into Steady Income</h1>
+  <p>Register your parking space with ParkEase and start earning. We bring the customers, you provide the space — it's that simple.</p>
+  <a href="#register" class="btn btn-primary" style="font-size:16px;padding:14px 35px;border-radius:30px;text-decoration:none;display:inline-flex">
+    <i class="fas fa-rocket"></i> Register Your Space
+  </a>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">500+</div><div class="lbl">Active Partners</div></div>
+    <div class="hero-stat"><div class="val">₹45K</div><div class="lbl">Avg Monthly Earnings</div></div>
+    <div class="hero-stat"><div class="val">60%</div><div class="lbl">Partner Revenue Share</div></div>
+    <div class="hero-stat"><div class="val">24/7</div><div class="lbl">Support Available</div></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+  <div class="section-title">
+    <h2>How It Works</h2>
+    <p>Get started in 4 simple steps</p>
+  </div>
+  <div class="steps">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <h3>Register</h3>
+      <p>Fill out the partner registration form with your space details, location, and pricing preferences.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <h3>Verification</h3>
+      <p>Our team reviews your application within 24-48 hours and verifies your parking space details.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <h3>Go Live</h3>
+      <p>Once approved, your space appears on ParkEase and customers can book slots instantly.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <h3>Earn</h3>
+      <p>Receive 60% of every booking. Earnings are transferred to your bank account weekly.</p>
+    </div>
+  </div>
+</div>
+
+<!-- BUSINESS PLAN SECTION -->
+<div class="plan-section">
+  <div class="plan-inner">
+    <div class="plan-title">
+      <h2>Our Business Model</h2>
+      <p>Transparent revenue sharing — you earn 60%, we take 40% for platform services</p>
+    </div>
+    <div class="plan-cards">
+      <div class="plan-card">
+        <div class="plan-icon">🚗</div>
+        <h3>What You Get</h3>
+        <ul class="plan-feature-list">
+          <li><i class="fas fa-check-circle"></i> 60% of every booking payment</li>
+          <li><i class="fas fa-check-circle"></i> Real-time booking dashboard</li>
+          <li><i class="fas fa-check-circle"></i> Weekly bank transfers</li>
+          <li><i class="fas fa-check-circle"></i> 24/7 customer support</li>
+          <li><i class="fas fa-check-circle"></i> Digital receipts & invoices</li>
+          <li><i class="fas fa-check-circle"></i> GST compliance assistance</li>
+        </ul>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-badge">BEST DEAL</div>
+        <div class="plan-icon">💰</div>
+        <h3>Revenue Split</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:15px 0">
+          <div style="background:rgba(0,0,0,0.1);border-radius:10px;padding:15px;text-align:center">
+            <div style="font-size:36px;font-weight:900;color:#006400">60%</div>
+            <div style="font-size:13px;font-weight:700">Your Share</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.1);border-radius:10px;padding:15px;text-align:center">
+            <div style="font-size:36px;font-weight:900;color:#666">40%</div>
+            <div style="font-size:13px;font-weight:700">Platform Fee</div>
+          </div>
+        </div>
+        <div class="earning-example" style="background:rgba(0,0,0,0.12)">
+          <div style="font-size:13px;font-weight:700;margin-bottom:10px">Example: ₹100/hr × 8hrs/day × 20 slots</div>
+          <div class="pricing-row" style="background:rgba(255,255,255,0.5)"><span>Gross Revenue</span><span>₹16,000/day</span></div>
+          <div class="pricing-row" style="background:rgba(255,255,255,0.5)"><span>Platform (40%)</span><span>₹6,400</span></div>
+          <div class="pricing-row" style="background:rgba(0,100,0,0.2);font-weight:800"><span>Your Earnings (60%)</span><span style="color:#006400">₹9,600/day</span></div>
+        </div>
+      </div>
+      <div class="plan-card">
+        <div class="plan-icon">🏢</div>
+        <h3>Platform Services</h3>
+        <p style="font-size:13px;color:#666;margin-bottom:15px">What ParkEase provides with the 40% commission:</p>
+        <ul class="plan-feature-list">
+          <li><i class="fas fa-check-circle"></i> Payment gateway & processing</li>
+          <li><i class="fas fa-check-circle"></i> Customer acquisition & marketing</li>
+          <li><i class="fas fa-check-circle"></i> Mobile app & web platform</li>
+          <li><i class="fas fa-check-circle"></i> Customer support & disputes</li>
+          <li><i class="fas fa-check-circle"></i> Fraud prevention & insurance</li>
+          <li><i class="fas fa-check-circle"></i> Analytics & reporting tools</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- PARTNER LISTING -->
+<div class="partners-section">
+  <div class="partners-inner">
+    <div class="section-title">
+      <h2>Our Active Partners</h2>
+      <p>Trusted parking spaces across the city</p>
+    </div>
+    <div class="partners-grid" id="partnersGrid">
+      <div style="text-align:center;padding:40px;color:#888;grid-column:1/-1">
+        <i class="fas fa-spinner fa-spin" style="font-size:30px;color:var(--primary)"></i>
+        <p style="margin-top:10px">Loading partners...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTRATION FORM -->
+<div class="form-section" id="register">
+  <div class="section-title">
+    <h2>Register Your Parking Space</h2>
+    <p>Join hundreds of partners earning with ParkEase</p>
+  </div>
+  <div class="form-card" id="formCard">
+    <div class="form-header">
+      <h2><i class="fas fa-building"></i> Partner Registration</h2>
+      <p>Complete all steps to get your space listed on ParkEase</p>
+      <div class="progress-bar-wrap">
+        <div class="progress-steps" id="progressSteps">
+          <div class="prog-step active" id="pstep1"><div class="prog-dot">1</div><div class="prog-label">Business Info</div></div>
+          <div class="prog-step" id="pstep2"><div class="prog-dot">2</div><div class="prog-label">Location</div></div>
+          <div class="prog-step" id="pstep3"><div class="prog-dot">3</div><div class="prog-label">Pricing</div></div>
+          <div class="prog-step" id="pstep4"><div class="prog-dot">4</div><div class="prog-label">Payment</div></div>
+          <div class="prog-step" id="pstep5"><div class="prog-dot">5</div><div class="prog-label">Agreement</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-body">
+      <!-- STEP 1: Business Info -->
+      <div class="form-step active" id="step1">
+        <div class="step-title"><i class="fas fa-building" style="color:var(--primary)"></i> Business Information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fas fa-store"></i> Business / Space Name *</label>
+            <input type="text" id="businessName" placeholder="e.g., City Center Parking Hub" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Owner / Contact Name *</label>
+            <input type="text" id="ownerName" placeholder="Your full name" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email Address *</label>
+            <input type="email" id="partnerEmail" placeholder="business@example.com" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-phone"></i> Mobile Number *</label>
+            <input type="tel" id="partnerPhone" placeholder="10-digit mobile number" maxlength="10" required>
+          </div>
+        </div>
+        <div class="form-row cols-1">
+          <div class="form-group">
+            <label><i class="fas fa-align-left"></i> Business Description</label>
+            <textarea id="description" placeholder="Describe your parking space, nearby landmarks, security measures..."></textarea>
+          </div>
+        </div>
+        <div class="form-nav">
+          <div></div>
+          <button class="btn btn-primary" onclick="nextStep(1)">Next: Location <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Location -->
+      <div class="form-step" id="step2">
+        <div class="step-title"><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> Location & Space Details</div>
+        <div class="form-row cols-1">
+          <div class="form-group">
+            <label><i class="fas fa-road"></i> Street Address *</label>
+            <input type="text" id="address" placeholder="Building/Shop No., Street Name, Landmark" required>
+          </div>
+        </div>
+        <div class="form-row cols-3">
+          <div class="form-group">
+            <label><i class="fas fa-city"></i> City *</label>
+            <input type="text" id="city" placeholder="e.g., Bhubaneswar" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-map"></i> State *</label>
+            <select id="state" required>
+              <option value="">Select State</option>
+              <option>Odisha</option><option>Andhra Pradesh</option><option>Delhi</option>
+              <option>Karnataka</option><option>Maharashtra</option><option>Tamil Nadu</option>
+              <option>Telangana</option><option>West Bengal</option><option>Gujarat</option>
+              <option>Rajasthan</option><option>Uttar Pradesh</option><option>Bihar</option>
+              <option>Madhya Pradesh</option><option>Punjab</option><option>Haryana</option>
+              <option>Kerala</option><option>Jharkhand</option><option>Chhattisgarh</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-mailbox"></i> PIN Code *</label>
+            <input type="text" id="pincode" placeholder="6-digit PIN" maxlength="6" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fas fa-warehouse"></i> Parking Type *</label>
+            <select id="parkingType" required>
+              <option value="Open">Open / Ground Level</option>
+              <option value="Covered">Covered / Basement</option>
+              <option value="Multi-Level">Multi-Level / Building</option>
+              <option value="Rooftop">Rooftop</option>
+              <option value="Valet">Valet Service</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-car"></i> Vehicle Types Accepted *</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" value="Car" name="slotType" checked onchange="updateCheck(this)"> 🚗 Car</label>
+              <label class="checkbox-item"><input type="checkbox" value="Bike" name="slotType" onchange="updateCheck(this)"> 🏍 Bike</label>
+              <label class="checkbox-item"><input type="checkbox" value="SUV" name="slotType" onchange="updateCheck(this)"> 🚙 SUV</label>
+              <label class="checkbox-item"><input type="checkbox" value="Truck" name="slotType" onchange="updateCheck(this)"> 🚚 Truck</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fas fa-star"></i> Amenities Offered</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" value="CCTV" name="amenity" onchange="updateCheck(this)"> 📷 CCTV</label>
+              <label class="checkbox-item"><input type="checkbox" value="Security" name="amenity" onchange="updateCheck(this)"> 👮 Security</label>
+              <label class="checkbox-item"><input type="checkbox" value="Covered" name="amenity" onchange="updateCheck(this)"> 🏠 Covered</label>
+              <label class="checkbox-item"><input type="checkbox" value="EV Charging" name="amenity" onchange="updateCheck(this)"> ⚡ EV Charging</label>
+              <label class="checkbox-item"><input type="checkbox" value="Lighting" name="amenity" onchange="updateCheck(this)"> 💡 Lighting</label>
+              <label class="checkbox-item"><input type="checkbox" value="Restroom" name="amenity" onchange="updateCheck(this)"> 🚻 Restroom</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button class="btn btn-secondary" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
+          <button class="btn btn-primary" onclick="nextStep(2)">Next: Pricing <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Pricing & Capacity -->
+      <div class="form-step" id="step3">
+        <div class="step-title"><i class="fas fa-tags" style="color:var(--primary)"></i> Pricing & Capacity</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fas fa-layer-group"></i> Total Parking Slots *</label>
+            <input type="number" id="totalSlots" placeholder="e.g., 20" min="1" max="500" oninput="updatePricingPreview()" required>
+            <span class="hint">Total number of vehicles you can accommodate</span>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-rupee-sign"></i> Price Per Hour (₹) *</label>
+            <input type="number" id="pricePerHr" placeholder="e.g., 60" min="10" max="1000" oninput="updatePricingPreview()" required>
+            <span class="hint">You set the price, we add GST on top</span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fas fa-clock"></i> Opening Time</label>
+            <input type="time" id="openingTime" value="06:00">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-moon"></i> Closing Time</label>
+            <input type="time" id="closingTime" value="22:00">
+          </div>
+        </div>
+        <div class="form-row cols-1">
+          <div class="form-group">
+            <label style="cursor:pointer"><input type="checkbox" id="is24hr" onchange="toggle24hr()" style="accent-color:var(--primary)"> &nbsp;Open 24 Hours</label>
+          </div>
+        </div>
+        <div class="pricing-preview" id="pricingPreview" style="display:none">
+          <h4><i class="fas fa-calculator"></i> Earning Preview (per slot per day — 8 hrs avg)</h4>
+          <div class="pricing-rows">
+            <div class="pricing-row"><span>Your rate</span><span id="previewRate">—</span></div>
+            <div class="pricing-row"><span>Expected daily bookings</span><span id="previewHrs">8 hrs avg/slot</span></div>
+            <div class="pricing-row"><span>Gross revenue (all slots)</span><span id="previewGross">—</span></div>
+            <div class="pricing-row platform"><span>ParkEase fee (40%)</span><span id="previewPlatform">—</span></div>
+            <div class="pricing-row partner"><span>Your daily earnings (60%)</span><span id="previewPartner">—</span></div>
+            <div class="pricing-row total"><span>Monthly estimate (25 days)</span><span id="previewMonthly">—</span></div>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button class="btn btn-secondary" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Back</button>
+          <button class="btn btn-primary" onclick="nextStep(3)">Next: Bank Details <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Bank / Payment Details -->
+      <div class="form-step" id="step4">
+        <div class="step-title"><i class="fas fa-university" style="color:var(--primary)"></i> Bank & Tax Details</div>
+        <div style="background:#fff8e1;border:2px solid #ffe082;border-radius:10px;padding:15px;margin-bottom:20px;font-size:13px;color:#856404">
+          <i class="fas fa-info-circle"></i> &nbsp;Your bank details are used only for sending weekly payouts. We use 256-bit encryption.
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fas fa-university"></i> Bank Account Number *</label>
+            <input type="text" id="bankAccount" placeholder="Enter account number" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-code-branch"></i> IFSC Code *</label>
+            <input type="text" id="ifscCode" placeholder="e.g., HDFC0001234" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fas fa-id-card"></i> PAN Number *</label>
+            <input type="text" id="panNumber" placeholder="e.g., ABCDE1234F" maxlength="10" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-file-invoice"></i> GST Number (optional)</label>
+            <input type="text" id="gstNumber" placeholder="15-digit GST number (if applicable)">
+          </div>
+        </div>
+        <div class="form-nav">
+          <button class="btn btn-secondary" onclick="prevStep(4)"><i class="fas fa-arrow-left"></i> Back</button>
+          <button class="btn btn-primary" onclick="nextStep(4)">Next: Agreement <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- STEP 5: Agreement -->
+      <div class="form-step" id="step5">
+        <div class="step-title"><i class="fas fa-file-signature" style="color:var(--primary)"></i> Partner Agreement</div>
+        <div class="agreement-box">
+          <h4>ParkEase Business Partner Agreement</h4>
+          <p><strong>1. Revenue Sharing:</strong> ParkEase will retain 40% of all booking revenue generated through the platform. The remaining 60% will be transferred to the partner's registered bank account every 7 days.</p>
+          <p><strong>2. Platform Responsibilities:</strong> ParkEase will provide the booking platform, payment processing, customer support, and marketing services. Partners are responsible for maintaining the parking space as described.</p>
+          <p><strong>3. Partner Responsibilities:</strong> Partners must maintain the agreed number of parking slots, ensure security and safety of vehicles, and adhere to the described operating hours. Any changes must be communicated 48 hours in advance.</p>
+          <p><strong>4. Cancellation Policy:</strong> Bookings cancelled by the customer 2+ hours in advance receive a full refund. Bookings cancelled within 2 hours are non-refundable. Partners cannot cancel accepted bookings without penalty.</p>
+          <p><strong>5. Quality Standards:</strong> Partners must maintain a minimum 3.5/5 star rating. Ratings below this threshold will result in a review and potential suspension from the platform.</p>
+          <p><strong>6. Payment Processing:</strong> All payments are processed via Razorpay. Partners will receive payments after deducting the platform commission and applicable taxes.</p>
+          <p><strong>7. Termination:</strong> Either party may terminate this agreement with 30 days written notice. ParkEase reserves the right to immediately suspend partners who violate terms.</p>
+          <ul>
+            <li>Partners agree to provide accurate information about their space</li>
+            <li>Partners consent to background verification of the property</li>
+            <li>Partners agree to GST compliance for their earnings</li>
+            <li>Partners understand the 40/60 revenue split is non-negotiable for the standard plan</li>
+          </ul>
+        </div>
+        <label class="agree-check" style="margin-top:15px">
+          <input type="checkbox" id="agreeTerms">
+          I have read and agree to the ParkEase Partner Agreement and confirm all information provided is accurate.
+        </label>
+        <div class="form-nav" style="margin-top:20px">
+          <button class="btn btn-secondary" onclick="prevStep(5)"><i class="fas fa-arrow-left"></i> Back</button>
+          <button class="btn btn-success" id="submitBtn" onclick="submitPartnerForm()">
+            <i class="fas fa-rocket"></i> Submit Registration
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">🎉</div>
+      <h2>Registration Submitted!</h2>
+      <p>Your application has been received. Our team will review your details and get back to you within 24-48 hours via email.</p>
+      <div class="partner-ref-box">
+        <div class="ref-label">Your Partner Reference ID</div>
+        <div class="ref-val" id="partnerRefDisplay">PTNER-XXXX</div>
+      </div>
+      <p style="font-size:13px;color:#888;margin-top:15px">Save this reference number for future communication with our team.</p>
+      <div style="margin-top:25px;display:flex;gap:15px;justify-content:center;flex-wrap:wrap">
+        <a href="index.html" class="btn btn-secondary"><i class="fas fa-home"></i> Go to Home</a>
+        <a href="seetbooking.html" class="btn btn-primary"><i class="fas fa-parking"></i> Book a Slot</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FOOTER -->
+<footer style="background:#0F2D52;color:rgba(255,255,255,0.7);padding:48px 24px 24px;margin-top:60px;font-family:'Inter',system-ui,sans-serif;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px;">
+      <div><div style="font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:10px;">Park<span style="color:#F59E0B">Ease</span></div><p style="font-size:0.85rem;line-height:1.6;max-width:220px">Smart parking solutions for Odisha.</p></div>
+      <div><h4 style="color:#fff;font-size:0.78rem;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em">Services</h4>
+        <ul style="list-style:none"><li style="margin-bottom:8px"><a href="seetbooking.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">Book a Slot</a></li><li style="margin-bottom:8px"><a href="vipform.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">VIP Parking</a></li><li style="margin-bottom:8px"><a href="business-partner.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">Partner With Us</a></li></ul>
+      </div>
+      <div><h4 style="color:#fff;font-size:0.78rem;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em">Company</h4>
+        <ul style="list-style:none"><li style="margin-bottom:8px"><a href="index.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">About Us</a></li><li style="margin-bottom:8px"><a href="index-4.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">Contact</a></li></ul>
+      </div>
+      <div><h4 style="color:#fff;font-size:0.78rem;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em">Contact</h4>
+        <ul style="list-style:none"><li style="margin-bottom:8px"><a href="tel:+919876543210" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">+91 98765 43210</a></li><li style="margin-bottom:8px"><a href="mailto:support@parkease.in" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">support@parkease.in</a></li></ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:18px;display:flex;justify-content:space-between;font-size:0.78rem;flex-wrap:wrap;gap:10px;">
+      <span>&copy; 2025 ParkEase. All rights reserved.</span>
+      <span><a href="business-partner.html" style="color:#F59E0B;text-decoration:none">Become a Partner</a></span>
+    </div>
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
