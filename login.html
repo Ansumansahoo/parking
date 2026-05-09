@@ -14,7 +14,7 @@
     .brand-logo span { color: #f5a623; }
     .brand-subtitle { font-size: 0.85rem; color: #888; margin-top: 4px; }
     h2 { font-size: 1.5rem; font-weight: 800; color: #1a2942; text-align: center; margin-bottom: 8px; }
-    .sub { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 28px; }
+    .sub { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 24px; }
     .form-group { margin-bottom: 18px; }
     .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
     .input-wrap { position: relative; }
@@ -26,24 +26,22 @@
     .remember { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #555; cursor: pointer; }
     .remember input[type=checkbox] { accent-color: #f5a623; width: 16px; height: 16px; }
     .forgot { font-size: 0.85rem; color: #f5a623; text-decoration: none; font-weight: 600; }
-    .forgot:hover { text-decoration: underline; }
     .btn-login { width: 100%; background: linear-gradient(135deg, #f5a623, #e8941a); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
+    .btn-login:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
+    .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
     .divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
     .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
     .divider span { font-size: 0.8rem; color: #aaa; }
-    .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-    .social-btn { border: 1.5px solid #e2e8f0; background: white; padding: 11px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #444; transition: border-color 0.2s; }
-    .social-btn:hover { border-color: #f5a623; }
     .signup-link { text-align: center; font-size: 0.9rem; color: #888; }
     .signup-link a { color: #f5a623; font-weight: 700; text-decoration: none; }
-    .signup-link a:hover { text-decoration: underline; }
     .alert { border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-bottom: 16px; display: none; align-items: center; gap: 8px; }
     .alert.show { display: flex; }
     .alert-error { background: #ffebee; color: #e53935; }
     .alert-success { background: #e8f5e9; color: #2e7d32; }
-    .demo-hint { background: #fff8e1; border: 1px solid #f5a623; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: #8a6200; margin-bottom: 20px; text-align: center; }
+    .db-badge { background: #e8f5e9; border: 1px solid #43a047; border-radius: 6px; padding: 6px 12px; font-size: 0.78rem; color: #2e7d32; text-align: center; margin-bottom: 20px; }
+    .demo-hint { background: #fff8e1; border: 1px solid #f5a623; border-radius: 8px; padding: 8px 12px; font-size: 0.78rem; color: #8a6200; text-align: center; margin-bottom: 16px; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="card">
@@ -53,16 +51,14 @@
   </div>
   <h2>Welcome Back!</h2>
   <p class="sub">Log in to manage your parking bookings</p>
+  <div class="db-badge"><i class="fa fa-database" style="margin-right:5px;"></i> Live database connected</div>
   <div class="demo-hint"><i class="fa fa-info-circle"></i> Demo: <strong>demo@parkease.com</strong> / <strong>demo123</strong></div>
-  <div class="alert alert-error" id="errorMsg"><i class="fa fa-exclamation-circle"></i> <span id="errorText">Invalid email or password.</span></div>
-  <div class="alert alert-success" id="successMsg"><i class="fa fa-check-circle"></i> Login successful! Redirecting...</div>
+  <div class="alert alert-error" id="errorMsg"><i class="fa fa-exclamation-circle"></i> <span id="errorText"></span></div>
+  <div class="alert alert-success" id="successMsg"><i class="fa fa-check-circle"></i> <span id="successText">Login successful! Redirecting...</span></div>
   <form id="loginForm" onsubmit="handleLogin(event)">
     <div class="form-group">
       <label>Email Address</label>
-      <div class="input-wrap">
-        <i class="fa fa-envelope icon"></i>
-        <input type="email" id="email" placeholder="you@example.com" required />
-      </div>
+      <div class="input-wrap"><i class="fa fa-envelope icon"></i><input type="email" id="email" placeholder="you@example.com" required /></div>
     </div>
     <div class="form-group">
       <label>Password</label>
@@ -76,38 +72,68 @@
       <label class="remember"><input type="checkbox" /> Remember me</label>
       <a href="#" class="forgot">Forgot password?</a>
     </div>
-    <button type="submit" class="btn-login"><i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>Log In</button>
+    <button type="submit" class="btn-login" id="loginBtn"><i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>Log In</button>
   </form>
-  <div class="divider"><span>or continue with</span></div>
-  <div class="social-btns">
-    <button class="social-btn" onclick="socialLogin()"><i class="fab fa-google" style="color:#EA4335;"></i> Google</button>
-    <button class="social-btn" onclick="socialLogin()"><i class="fa fa-phone" style="color:#25D366;"></i> Phone OTP</button>
-  </div>
+  <div class="divider"><span>or</span></div>
   <p class="signup-link">Don't have an account? <a href="signup.html">Sign Up Free</a></p>
 </div>
 <script>
+  const SUPABASE_URL = 'https://xpziztrwufkqndzeguyj.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
   function togglePw() {
     const pw = document.getElementById('password'), eye = document.getElementById('eyeIcon');
     pw.type = pw.type === 'password' ? 'text' : 'password';
     eye.className = pw.type === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash';
   }
-  function handleLogin(e) {
+
+  async function handleLogin(e) {
     e.preventDefault();
-    const email = document.getElementById('email').value;
+    const btn = document.getElementById('loginBtn');
+    const errorDiv = document.getElementById('errorMsg');
+    const successDiv = document.getElementById('successMsg');
+    errorDiv.classList.remove('show');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right:8px;"></i>Logging in...';
+
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
-    document.getElementById('errorMsg').classList.remove('show');
-    const users = JSON.parse(localStorage.getItem('parkease_users') || '[]');
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user || (email === 'demo@parkease.com' && password === 'demo123')) {
-      document.getElementById('successMsg').classList.add('show');
-      localStorage.setItem('parkease_logged_in', JSON.stringify({email: email, name: user ? (user.firstName+' '+user.lastName) : 'Demo User'}));
-      setTimeout(() => { window.location.href = 'seetbooking.html'; }, 1500);
-    } else {
-      document.getElementById('errorText').textContent = 'Invalid credentials. Use demo@parkease.com / demo123';
-      document.getElementById('errorMsg').classList.add('show');
+
+    // Demo user shortcut
+    if (email === 'demo@parkease.com' && password === 'demo123') {
+      localStorage.setItem('parkease_logged_in', JSON.stringify({email, name: 'Demo User', id: 'demo'}));
+      successDiv.classList.add('show');
+      setTimeout(() => window.location.href = 'seetbooking.html', 1500);
+      return;
     }
+
+    // Check against database
+    const { data: users, error } = await sb.from('users').select('*').eq('email', email);
+    if (error || !users || users.length === 0) {
+      document.getElementById('errorText').textContent = 'No account found with this email.';
+      errorDiv.classList.add('show');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>Log In';
+      return;
+    }
+
+    const user = users[0];
+    if (user.password_hash !== btoa(password)) {
+      document.getElementById('errorText').textContent = 'Incorrect password. Please try again.';
+      errorDiv.classList.add('show');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>Log In';
+      return;
+    }
+
+    localStorage.setItem('parkease_logged_in', JSON.stringify({
+      email: user.email, name: user.first_name + ' ' + user.last_name, id: user.id
+    }));
+    document.getElementById('successText').textContent = 'Welcome back ' + user.first_name + '! Redirecting...';
+    successDiv.classList.add('show');
+    setTimeout(() => window.location.href = 'seetbooking.html', 1500);
   }
-  function socialLogin() { alert('Social login: connect your OAuth provider here.'); }
 </script>
 </body>
 </html>
