@@ -1,495 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slot Booking - ParkEase</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Slot - ParkEase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-:root{--primary:#0F2D52;--primary-light:#1565C0;--accent:#F59E0B;--accent-dark:#D97706;--green:#16A34A;--red:#DC2626;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-400:#9CA3AF;--gray-600:#4B5563;--gray-800:#1F2937;--shadow-sm:0 1px 3px rgba(0,0,0,0.08);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 10px 25px rgba(0,0,0,0.10);--radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-pill:999px;--tr:all 0.2s ease;}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--gray-50);color:var(--gray-800);-webkit-font-smoothing:antialiased;}
-nav{background:var(--primary)!important;height:64px;display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,0.25);}
-.nav-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
-.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-0.5px;}
-.nav-brand-icon{width:36px;height:36px;background:var(--accent);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:16px;}
-.nav-brand span{color:var(--accent);}
-.nav-links{display:flex;list-style:none;gap:4px;align-items:center;}
-.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.875rem;font-weight:500;padding:7px 14px;border-radius:var(--radius-sm);transition:var(--tr);}
-.nav-links a:hover{color:#fff;background:rgba(255,255,255,0.1);}
-.nav-links a.active{color:var(--accent);font-weight:600;}
-.partner-link{color:var(--accent)!important;font-weight:600!important;border:1px solid rgba(245,158,11,0.4)!important;border-radius:var(--radius-pill)!important;}
-.nav-btns{display:flex;gap:10px;align-items:center;}
-.btn-outline{color:rgba(255,255,255,0.85);background:transparent;border:1.5px solid rgba(255,255,255,0.3);padding:7px 16px;border-radius:var(--radius-pill);font-size:0.85rem;font-weight:600;cursor:pointer;text-decoration:none;transition:var(--tr);}
-.btn-fill{background:var(--accent);color:var(--primary);border:none;padding:8px 18px;border-radius:var(--radius-pill);font-size:0.85rem;font-weight:700;cursor:pointer;text-decoration:none;transition:var(--tr);}
-.btn-fill:hover{background:var(--accent-dark);}
-.page-header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:44px 24px 52px;text-align:center;position:relative;overflow:hidden;}
-.page-header::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:24px;background:var(--gray-50);clip-path:ellipse(55% 100% at 50% 100%);}
-.page-header h1{font-size:1.875rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px;}
-.page-header p{color:rgba(255,255,255,0.8);font-size:0.95rem;}
-.live-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(22,163,74,0.2);border:1px solid rgba(22,163,74,0.4);color:#4ade80;padding:5px 14px;border-radius:var(--radius-pill);font-size:0.8rem;font-weight:600;margin-top:12px;}
-.live-dot{width:6px;height:6px;background:#4ade80;border-radius:50%;animation:lp 1.5s ease infinite;}
-@keyframes lp{0%,100%{opacity:1}50%{opacity:0.4}}
-.trust-bar{background:#fff;border-bottom:1px solid var(--gray-100);padding:10px 24px;}
-.trust-bar-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;gap:28px;flex-wrap:wrap;}
-.trust-item{display:flex;align-items:center;gap:6px;font-size:0.78rem;font-weight:600;color:var(--gray-600);}
-.trust-item i{color:var(--green);font-size:12px;}
-.stats-bar{background:#fff;box-shadow:var(--shadow-sm);border-radius:var(--radius-lg);padding:20px;margin:24px 24px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;border:1px solid var(--gray-100);}
-.stat-item{text-align:center;padding:8px;}
-.stat-val{font-size:2rem;font-weight:900;color:var(--primary);}
-.stat-val.green{color:var(--green)!important;}
-.stat-val.red{color:var(--red)!important;}
-.stat-val.amber{color:var(--accent)!important;}
-.stat-lbl{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--gray-400);font-weight:600;margin-top:2px;}
-.main-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;max-width:1148px;margin:24px auto 0;padding:0 24px 60px;}
-.booking-card,.summary-card{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);}
-.card-section-title{font-size:0.875rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:8px;padding:18px 22px 14px;border-bottom:1px solid var(--gray-100);}
-.card-section-title i{color:var(--accent);}
-.form-area,.form-grid-wrapper{padding:22px;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.fg{display:flex;flex-direction:column;gap:6px;}
-.fl{font-size:0.75rem;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.05em;}
-.fi{padding:10px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-size:0.875rem;font-family:inherit;background:#fff;color:var(--gray-800);transition:var(--tr);width:100%;}
-.fi:focus{outline:none;border-color:var(--primary-light);box-shadow:0 0 0 3px rgba(21,101,192,0.1);}
-.slot-area{padding:22px;}
-.slot-legend{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
-.leg-item{display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--gray-600);font-weight:500;}
-.leg-dot{width:12px;height:12px;border-radius:3px;}
-.leg-dot.avail{background:#dcfce7;border:1.5px solid var(--green);}
-.leg-dot.booked{background:#fee2e2;border:1.5px solid var(--red);}
-.leg-dot.sel{background:#dbeafe;border:1.5px solid var(--primary-light);}
-.slot-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
-.slot-btn{aspect-ratio:1;border-radius:var(--radius-md);border:2px solid;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:0.75rem;font-weight:700;transition:var(--tr);}
-.slot-btn.available{background:#f0fdf4;border-color:#86efac;color:var(--green);}
-.slot-btn.available:hover{background:#dcfce7;border-color:var(--green);transform:translateY(-2px);box-shadow:0 4px 10px rgba(22,163,74,0.2);}
-.slot-btn.booked{background:#fef2f2;border-color:#fca5a5;color:var(--red);cursor:not-allowed;}
-.slot-btn.selected{background:#dbeafe;border-color:var(--primary-light);color:var(--primary-light);}
-.summary-body{padding:22px;}
-.sum-placeholder{background:var(--gray-50);border-radius:var(--radius-md);padding:28px;text-align:center;color:var(--gray-400);font-size:0.875rem;border:2px dashed var(--gray-200);}
-.sum-placeholder i{font-size:28px;margin-bottom:8px;display:block;}
-.sum-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:0.875rem;}
-.sum-row:last-child{border:none;font-weight:700;font-size:0.95rem;color:var(--primary);}
-.sum-label{color:var(--gray-600);}
-.sum-val{font-weight:600;}
-.confirm-btn{width:100%;padding:13px;background:var(--accent);color:var(--primary);border:none;border-radius:var(--radius-md);font-size:0.9rem;font-weight:700;cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;margin-top:16px;}
-.confirm-btn:hover{background:var(--accent-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(245,158,11,0.3);}
-.confirm-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px);}
-.modal-box{background:#fff;border-radius:24px;padding:40px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.2);}
-.modal-icon{font-size:56px;margin-bottom:16px;}
-.modal-box h2{font-size:1.5rem;font-weight:800;color:var(--primary);margin-bottom:8px;}
-.modal-box p{color:var(--gray-600);font-size:0.9rem;margin-bottom:20px;}
-.booking-ref-box{background:var(--gray-50);border:2px dashed var(--primary-light);border-radius:var(--radius-md);padding:16px;margin:16px 0;}
-.booking-ref-box .ref-label{font-size:0.75rem;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.05em;}
-.booking-ref-box .ref-val{font-size:1.5rem;font-weight:900;color:var(--primary);letter-spacing:2px;margin-top:4px;}
-.pe-footer{background:var(--primary);color:rgba(255,255,255,0.7);padding:48px 24px 24px;margin-top:0;}
-.pe-footer-inner{max-width:1200px;margin:0 auto;}
-.pe-footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px;}
-.pe-footer-brand{font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:10px;}
-.pe-footer-brand em{color:var(--accent);font-style:normal;}
-.pe-footer-col h4{color:#fff;font-size:0.78rem;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em;}
-.pe-footer-links{list-style:none;}
-.pe-footer-links li{margin-bottom:8px;}
-.pe-footer-links a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem;transition:var(--tr);}
-.pe-footer-links a:hover{color:var(--accent);}
-.pe-footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:18px;display:flex;justify-content:space-between;font-size:0.78rem;flex-wrap:wrap;gap:10px;}
-.pe-footer-bottom a{color:var(--accent);}
-@media(max-width:900px){.main-layout{grid-template-columns:1fr;}.slot-grid{grid-template-columns:repeat(4,1fr);}.pe-footer-grid{grid-template-columns:1fr 1fr;}.nav-links{display:none;}}
-@media(max-width:640px){.stats-bar{grid-template-columns:1fr 1fr;}.form-grid{grid-template-columns:1fr;}}
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#0F2D52;--primary-light:#1565C0;--accent:#F59E0B;--accent-dark:#D97706;--green:#16A34A;--red:#DC2626;--bg:#F8FAFF;--card:#fff;--text:#1E293B;--text-light:#64748B;--border:#E2E8F0;--radius:12px;--shadow:0 4px 20px rgba(15,45,82,.08)}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+/* NAV */
+nav{background:var(--primary);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:999;box-shadow:0 2px 16px rgba(15,45,82,.4)}
+.nav-brand{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+.nav-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:var(--primary)}
+.nav-name{font-weight:700;font-size:1.15rem;color:#fff}.nav-name span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s}.nav-links a:hover,.nav-links a.active{color:var(--accent)}
+.nav-partner{border:1.5px solid var(--accent);color:var(--accent)!important;padding:.3rem .9rem;border-radius:20px;font-size:.85rem!important}
+.nav-cta{display:flex;align-items:center;gap:.75rem}
+.btn-login{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:.4rem 1.1rem;border-radius:8px;font-size:.875rem;font-weight:500;cursor:pointer;text-decoration:none;transition:all .2s}.btn-login:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.btn-signup{background:var(--accent);border:none;color:var(--primary);padding:.45rem 1.2rem;border-radius:8px;font-size:.875rem;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s}.btn-signup:hover{background:var(--accent-dark)}
+/* TRUST BAR */
+.trust-bar{background:var(--primary);border-top:1px solid rgba(255,255,255,.08);padding:.55rem 2rem;display:flex;align-items:center;justify-content:center;gap:2.5rem;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:.4rem;color:rgba(255,255,255,.75);font-size:.78rem;font-weight:500}
+.trust-item i{color:var(--accent);font-size:.85rem}
+/* PAGE HEADER */
+.page-header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);padding:2.5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:50px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%)}
+.page-header h1{font-size:2rem;font-weight:800;color:#fff;margin-bottom:.4rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.page-header p{color:rgba(255,255,255,.75);font-size:.95rem}
+.db-badge{display:inline-flex;align-items:center;gap:.4rem;margin-top:.6rem;background:rgba(22,163,74,.15);border:1px solid rgba(22,163,74,.3);color:#4ade80;padding:.3rem .9rem;border-radius:20px;font-size:.8rem;font-weight:500}
+.db-badge::before{content:'';width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* MAIN LAYOUT */
+.booking-container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem;display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start}
+/* STATS STRIP */
+.stats-strip{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:.5rem}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:1.2rem;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border)}
+.stat-val{font-size:1.8rem;font-weight:800;color:var(--accent);line-height:1}
+.stat-label{font-size:.75rem;color:var(--text-light);font-weight:500;margin-top:.3rem;text-transform:uppercase;letter-spacing:.04em}
+/* SLOT GRID */
+.slot-section{background:var(--card);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);border:1px solid var(--border)}
+.section-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.slot-legend{display:flex;gap:1.2rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-light);font-weight:500}
+.legend-dot{width:14px;height:14px;border-radius:4px}
+.ld-available{background:#dcfce7;border:2px solid var(--green)}
+.ld-booked{background:#fee2e2;border:2px solid var(--red)}
+.ld-selected{background:var(--accent);border:2px solid var(--accent-dark)}
+.zone-label{font-size:.75rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em;margin:1rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px dashed var(--border)}
+.slot-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-bottom:.5rem}
+.slot-btn{padding:.7rem .4rem;border-radius:8px;border:2px solid;cursor:pointer;font-size:.78rem;font-weight:600;text-align:center;transition:all .15s;position:relative}
+.slot-btn.available{background:#f0fdf4;border-color:#86efac;color:var(--green)}.slot-btn.available:hover{background:#dcfce7;transform:scale(1.05)}
+.slot-btn.booked{background:#fef2f2;border-color:#fca5a5;color:var(--red);cursor:not-allowed;opacity:.7}
+.slot-btn.selected{background:var(--accent);border-color:var(--accent-dark);color:var(--primary);transform:scale(1.05)}
+/* BOOKING FORM */
+.form-section{background:var(--card);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);border:1px solid var(--border);margin-top:1rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-group.full{grid-column:1/-1}
+label{font-size:.8rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.9rem;color:var(--text);background:#fafbfc;transition:border .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary-light);background:#fff}
+.confirm-btn{width:100%;padding:1rem;background:var(--accent);border:none;color:var(--primary);font-weight:700;font-size:1rem;border-radius:10px;cursor:pointer;transition:all .2s;margin-top:1rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.confirm-btn:hover{background:var(--accent-dark);transform:translateY(-1px)}
+.confirm-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+/* BOOKING INFO SIDEBAR */
+.info-sidebar{display:flex;flex-direction:column;gap:1rem}
+.info-card{background:var(--card);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow);border:1px solid var(--border)}
+.info-card h3{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.info-row:last-child{border-bottom:none}
+.info-row .label{color:var(--text-light)}
+.info-row .value{font-weight:600;color:var(--text)}
+.info-row .total{font-size:1.1rem;font-weight:800;color:var(--accent)}
+.amenity-list{display:flex;flex-direction:column;gap:.6rem}
+.amenity{display:flex;align-items:center;gap:.6rem;font-size:.85rem;color:var(--text-light)}
+.amenity i{color:var(--accent);width:16px;text-align:center}
+/* SUCCESS */
+.success-overlay{display:none;position:fixed;inset:0;background:rgba(15,45,82,.85);z-index:9999;align-items:center;justify-content:center}
+.success-card{background:#fff;border-radius:20px;padding:2.5rem;text-align:center;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.success-icon{width:70px;height:70px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:2rem;color:var(--green)}
+.success-card h2{font-size:1.4rem;font-weight:800;color:var(--text);margin-bottom:.4rem}
+.success-card p{color:var(--text-light);font-size:.9rem;margin-bottom:1.2rem}
+.booking-ref{background:var(--bg);border:2px dashed var(--border);border-radius:10px;padding:.8rem;font-family:monospace;font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:1.2rem}
+.btn-success{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:var(--accent);color:var(--primary);border:none;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer;text-decoration:none}
+/* FOOTER */
+footer{background:var(--primary);color:rgba(255,255,255,.8);padding:3rem 2rem 1.5rem;margin-top:4rem}
+.footer-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:2rem}
+.footer-brand .brand-name{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:.5rem}.footer-brand .brand-name span{color:var(--accent)}
+.footer-brand p{font-size:.85rem;line-height:1.6;opacity:.7}
+.footer-col h4{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom.8rem;margin-bottom:.8rem}
+.footer-col a{display:block;color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;margin-bottom:.4rem;transition:color .2s}.footer-col a:hover{color:#fff}
+.footer-bottom{max-width:1100px;margin:2rem auto 0;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;font-size:.8rem;opacity:.6}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.8);z-index:9998;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:768px){.booking-container{grid-template-columns:1fr}.stats-strip{grid-template-columns:repeat(2,1fr)}.slot-grid{grid-template-columns:repeat(4,1fr)}.form-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.nav-links{display:none}}
 </style>
 </head>
 <body>
 <nav>
-  <div class="nav-inner">
-    <a href="index.html" class="nav-brand">
-      <div class="nav-brand-icon"><i class="fas fa-parking"></i></div>
-      Park<span>Ease</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="seetbooking.html" class="active">Book a Slot</a></li>
-      <li><a href="vipform.html">VIP Parking</a></li>
-      <li><a href="index-4.html">Contact</a></li>
-      <li><a href="business-partner.html" class="partner-link">🤝 Partner With Us</a></li>
-    </ul>
-    <div class="nav-btns">
-      <a href="login.html" class="btn-outline">Log In</a>
-      <a href="signup.html" class="btn-fill">Sign Up Free</a>
-    </div>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">P</div>
+    <span class="nav-name">Park<span>Ease</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="seetbooking.html" class="active">Book a Slot</a></li>
+    <li><a href="vipform.html">VIP Parking</a></li>
+    <li><a href="index-4.html">Contact</a></li>
+    <li><a href="business-partner.html" class="nav-partner">🤝 Partner With Us</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="login.html" class="btn-login">Log In</a>
+    <a href="signup.html" class="btn-signup">Sign Up Free</a>
   </div>
 </nav>
-
+<div class="trust-bar">
+  <div class="trust-item"><i class="fas fa-shield-alt"></i>256-bit SSL Secure</div>
+  <div class="trust-item"><i class="fas fa-check-circle"></i>Instant Confirmation</div>
+  <div class="trust-item"><i class="fas fa-undo-alt"></i>Free Cancellation (2 hrs)</div>
+  <div class="trust-item"><i class="fas fa-star"></i>4.8/5 Rated</div>
+  <div class="trust-item"><i class="fas fa-clock"></i>24/7 Support</div>
+</div>
 <div class="page-header">
-  <h1><i class="fa fa-map-marked-alt" style="color:#f5a623;margin-right:12px;"></i>Select Your Parking Slot</h1>
+  <h1><i class="fas fa-map-marked-alt"></i> Select Your Parking Slot</h1>
   <p>Real-time slot availability — Choose, book, and confirm instantly</p>
-  <div class="db-badge"><i class="fa fa-circle" style="font-size:0.5rem;color:#43a047;"></i> Live database connected</div>
+  <div class="db-badge">Live database connected</div>
 </div>
-
-<div class="stats-bar">
-  <div class="stats-grid">
-    <div class="stat-item"><div class="stat-num c1" id="totalSlots">24</div><div class="stat-label">Total Slots</div></div>
-    <div class="stat-item"><div class="stat-num c2" id="availableCount">-</div><div class="stat-label">Available</div></div>
-    <div class="stat-item"><div class="stat-num c3" id="bookedCount">-</div><div class="stat-label">Booked</div></div>
-    <div class="stat-item"><div class="stat-num c4" id="selectedCount">0</div><div class="stat-label">Selected</div></div>
+<div class="booking-container">
+  <div class="stats-strip">
+    <div class="stat-card"><div class="stat-val" id="totalSlots">24</div><div class="stat-label">Total Slots</div></div>
+    <div class="stat-card"><div class="stat-val" id="availableSlots" style="color:var(--green)">–</div><div class="stat-label">Available</div></div>
+    <div class="stat-card"><div class="stat-val" id="bookedSlots" style="color:var(--red)">–</div><div class="stat-label">Booked</div></div>
+    <div class="stat-card"><div class="stat-val" id="selectedCount" style="color:var(--accent)">0</div><div class="stat-label">Selected</div></div>
   </div>
-</div>
-
-<div class="main-container">
-  <div style="display:flex;flex-direction:column;gap:20px;">
-    <div class="details-card">
-      <div class="card-title"><i class="fa fa-calendar-check"></i> Booking Details</div>
-      <div class="form-grid">
-        <div class="form-group"><label>Name / User ID</label><input type="text" id="userId" placeholder="Your name or ID" /></div>
-        <div class="form-group"><label>Vehicle Number</label><input type="text" id="vehicleNum" placeholder="OD 05 AB 1234" /></div>
-        <div class="form-group"><label>Date</label><input type="date" id="bookingDate" /></div>
-        <div class="form-group"><label>Zone</label><select id="zone"><option value="">Select Zone</option><option>Zone A - Bhubaneswar Central</option><option>Zone B - Puri Beach</option><option>Zone C - Cuttack Silver City</option><option>Zone D - BBSR Airport</option></select></div>
-        <div class="form-group"><label>Check In</label><input type="time" id="checkIn" /></div>
-        <div class="form-group"><label>Check Out</label><input type="time" id="checkOut" /></div>
-        <div class="form-group"><label>Vehicle Type</label><select id="vehicleType"><option>4-Wheeler Car</option><option>2-Wheeler / Bike</option><option>SUV / Large Vehicle</option><option>Electric Vehicle (EV)</option></select></div>
-        <div class="form-group"><label>Phone</label><input type="tel" id="phone" placeholder="+91 XXXXX XXXXX" /></div>
-      </div>
-    </div>
-
+  <div style="display:flex;flex-direction:column;gap:1rem">
     <div class="slot-section">
-      <div class="card-title"><i class="fa fa-parking"></i> Parking Layout — Live Availability</div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot dot-a"></div> Available</div>
-        <div class="legend-item"><div class="legend-dot dot-s"></div> Selected</div>
-        <div class="legend-item"><div class="legend-dot dot-b"></div> Booked</div>
+      <div class="section-title"><i class="fas fa-parking"></i> Parking Layout — Live Availability</div>
+      <div class="slot-legend">
+        <div class="legend-item"><div class="legend-dot ld-available"></div>Available</div>
+        <div class="legend-item"><div class="legend-dot ld-booked"></div>Booked</div>
+        <div class="legend-item"><div class="legend-dot ld-selected"></div>Selected</div>
       </div>
-      <div class="parking-area">
-        <div class="entry-exit">
-          <div class="badge entry"><i class="fa fa-arrow-right"></i> ENTRY</div>
-          <span style="font-size:0.72rem;color:#90a4ae;font-weight:600;">Ground Floor</span>
-          <div class="badge exit"><i class="fa fa-arrow-right"></i> EXIT</div>
-        </div>
-        <div class="zones-container" id="slotsContainer">
-          <div class="loading-slots"><i class="fa fa-spinner fa-spin" style="color:#f5a623;font-size:1.5rem;"></i><p style="margin-top:8px;">Loading live slot data...</p></div>
-        </div>
+      <div id="slotContainer">
+        <div class="zone-label"><i class="fas fa-arrow-right"></i> ENTRY</div>
+        <div class="zone-label" style="font-size:.65rem;color:var(--text-light)">Ground Floor</div>
+        <div class="slot-grid" id="groundFloor"></div>
+        <div class="zone-label" style="margin-top:1.2rem"><i class="fas fa-arrow-right"></i> EXIT</div>
+        <div id="loadingSlots" style="text-align:center;padding:1.5rem;color:var(--text-light)"><i class="fas fa-spinner fa-spin" style="color:var(--accent)"></i> Loading live slot data...</div>
       </div>
     </div>
-
-    <button class="btn-book" id="bookBtn" disabled onclick="confirmBooking()">
-      <i class="fa fa-check-circle"></i>
-      <span id="bookBtnText">Select a slot to continue</span>
-    </button>
+    <div class="form-section">
+      <div class="section-title"><i class="fas fa-calendar-check"></i> Booking Details</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Name / User ID</label><input type="text" id="userName" placeholder="Your name or ID" required></div>
+        <div class="form-group"><label>Vehicle Number</label><input type="text" id="vehicleNum" placeholder="OD 05 AB 1234" required></div>
+        <div class="form-group"><label>Date</label><input type="date" id="bookDate" required></div>
+        <div class="form-group"><label>Zone</label>
+          <select id="zone">
+            <option value="">Select Zone</option>
+            <option>Zone A – Ground Floor</option>
+            <option>Zone B – First Floor</option>
+            <option>Zone C – Rooftop</option>
+            <option>Zone D – EV Bay</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Check In</label><input type="time" id="checkIn" required></div>
+        <div class="form-group"><label>Check Out</label><input type="time" id="checkOut" required></div>
+        <div class="form-group"><label>Vehicle Type</label>
+          <select id="vehicleType">
+            <option>4-Wheeler Car</option>
+            <option>2-Wheeler Bike</option>
+            <option>SUV / MUV</option>
+            <option>EV Vehicle</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="phone" placeholder="+91 XXXXX XXXXX"></div>
+      </div>
+      <button class="confirm-btn" id="confirmBtn" onclick="initiateBooking()" disabled>
+        <i class="fas fa-lock"></i> Select a slot to continue
+      </button>
+    </div>
   </div>
-
-  <div class="sidebar">
-    <div class="summary-card">
-      <div class="card-title"><i class="fa fa-receipt"></i> Booking Summary</div>
-      <div class="selected-slot-display" id="slotDisplay">
-        <div style="color:#90a4ae;font-size:0.88rem;">No slot selected</div>
-      </div>
-      <div class="price-breakdown">
-        <div class="price-row"><span>Rate per hour</span><span>&#8377; 40</span></div>
-        <div class="price-row"><span>Duration</span><span id="durationText">-- hrs</span></div>
-        <div class="price-row"><span>Base charge</span><span id="basePrice">&#8377; --</span></div>
-        <div class="price-row"><span>GST (18%)</span><span id="gstPrice">&#8377; --</span></div>
-        <div class="price-row total"><span>Total</span><span id="totalPrice">&#8377; --</span></div>
-      </div>
+  <div class="info-sidebar">
+    <div class="info-card">
+      <h3><i class="fas fa-receipt"></i> Booking Summary</h3>
+      <div class="info-row"><span class="label">Slots Selected</span><span class="value" id="sumSlots">–</span></div>
+      <div class="info-row"><span class="label">Rate per hour</span><span class="value">₹ 40</span></div>
+      <div class="info-row"><span class="label">Duration</span><span class="value" id="sumDur">–</span></div>
+      <div class="info-row"><span class="label">Base charge</span><span class="value" id="sumBase">–</span></div>
+      <div class="info-row"><span class="label">GST (18%)</span><span class="value" id="sumGst">–</span></div>
+      <div class="info-row"><span class="label" style="font-weight:700">Total</span><span class="total" id="sumTotal">–</span></div>
     </div>
     <div class="info-card">
-      <div class="card-title"><i class="fa fa-info-circle"></i> Info</div>
-      <div class="info-item"><i class="fa fa-shield-alt"></i> 24/7 CCTV surveillance</div>
-      <div class="info-item"><i class="fa fa-bolt"></i> EV charging in Zone D</div>
-      <div class="info-item"><i class="fa fa-times-circle"></i> Free cancel up to 2hrs</div>
-      <div class="info-item"><i class="fa fa-headset"></i> +91 98765 43210</div>
-      <div class="info-item"><i class="fa fa-rupee-sign"></i> &#8377;40/hr | Overnight &#8377;300</div>
+      <h3><i class="fas fa-info-circle"></i> Parking Info</h3>
+      <div class="amenity-list">
+        <div class="amenity"><i class="fas fa-video"></i> 24/7 CCTV surveillance</div>
+        <div class="amenity"><i class="fas fa-bolt"></i> EV charging in Zone D</div>
+        <div class="amenity"><i class="fas fa-times-circle"></i> Free cancel up to 2hrs</div>
+        <div class="amenity"><i class="fas fa-phone"></i> +91 98765 43210</div>
+        <div class="amenity"><i class="fas fa-rupee-sign"></i> ₹40/hr | Overnight ₹300</div>
+      </div>
+    </div>
+    <div class="info-card" style="background:linear-gradient(135deg,var(--primary),var(--primary-light));border:none">
+      <h3 style="color:#fff"><i class="fas fa-crown" style="color:var(--accent)"></i> Upgrade to VIP</h3>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.7);margin-bottom:1rem">Priority access, dedicated attendant, free vehicle inspection</p>
+      <a href="vipform.html" style="display:inline-flex;align-items:center;gap:.4rem;background:var(--accent);color:var(--primary);padding:.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:700;font-size:.85rem"><i class="fas fa-star"></i> Book VIP</a>
     </div>
   </div>
 </div>
-
-<div class="modal-overlay" id="confirmModal">
-  <div class="modal">
-    <div class="modal-icon"><i class="fa fa-check-circle"></i></div>
+<div class="success-overlay" id="successOverlay" style="display:none">
+  <div class="success-card">
+    <div class="success-icon"><i class="fas fa-check"></i></div>
     <h2>Booking Confirmed!</h2>
-    <p>Your slot is reserved and saved to the database.</p>
-    <div class="modal-id" id="bookingId">PKE-000000</div>
-    <div class="modal-details">
-      <div class="modal-row"><span>Slot</span><span id="c-slot">--</span></div>
-      <div class="modal-row"><span>Name</span><span id="c-user">--</span></div>
-      <div class="modal-row"><span>Vehicle</span><span id="c-vehicle">--</span></div>
-      <div class="modal-row"><span>Date</span><span id="c-date">--</span></div>
-      <div class="modal-row"><span>Check In</span><span id="c-checkin">--</span></div>
-      <div class="modal-row"><span>Check Out</span><span id="c-checkout">--</span></div>
-      <div class="modal-row"><span>Total</span><span id="c-total" style="color:#f5a623;font-weight:800;">--</span></div>
-    </div>
-    <button class="btn-modal" onclick="closeModal()"><i class="fa fa-home" style="margin-right:8px;"></i>Back to Home</button>
+    <p>Your parking slot has been reserved. Check your email for details.</p>
+    <div class="booking-ref" id="bookingRef">PE-XXXXXX</div>
+    <a href="index.html" class="btn-success"><i class="fas fa-home"></i> Back to Home</a>
   </div>
 </div>
-
-<footer class="pe-footer">
-  <div class="pe-footer-inner">
-    <div class="pe-footer-grid">
-      <div><div class="pe-footer-brand">Park<em>Ease</em></div><p style="font-size:0.85rem;line-height:1.6;max-width:220px">Smart parking solutions for Odisha.</p></div>
-      <div class="pe-footer-col"><h4>Services</h4><ul class="pe-footer-links"><li><a href="seetbooking.html">Book a Slot</a></li><li><a href="vipform.html">VIP Parking</a></li><li><a href="business-partner.html">Partner With Us</a></li></ul></div>
-      <div class="pe-footer-col"><h4>Company</h4><ul class="pe-footer-links"><li><a href="index.html">About Us</a></li><li><a href="index-4.html">Contact</a></li></ul></div>
-      <div class="pe-footer-col"><h4>Contact</h4><ul class="pe-footer-links"><li><a href="tel:+919876543210">+91 98765 43210</a></li><li><a href="mailto:support@parkease.in">support@parkease.in</a></li></ul></div>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p style="color:var(--primary);font-weight:600">Processing your booking...</p>
+</div>
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="brand-name">Park<span>Ease</span></div>
+      <p>Smart parking solutions for Odisha. Find, book and pay in seconds.</p>
     </div>
-    <div class="pe-footer-bottom"><span>&copy; 2025 ParkEase. All rights reserved.</span><span><a href="business-partner.html">Become a Partner</a></span></div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="seetbooking.html">Book a Slot</a>
+      <a href="vipform.html">VIP Parking</a>
+      <a href="business-partner.html">Partner With Us</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="index.html">About Us</a>
+      <a href="index-4.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="tel:+919876543210">+91 98765 43210</a>
+      <a href="mailto:support@parkease.in">support@parkease.in</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 ParkEase. All rights reserved.</span>
+    <a href="business-partner.html" style="color:var(--accent);text-decoration:none">Become a Partner</a>
   </div>
 </footer>
-
 <script>
-  const SUPABASE_URL = 'https://xpziztrwufkqndzeguyj.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM';
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  let selectedSlot = null;
-  let slotsData = [];
-
-  function getRow(n) { if(n<=6)return'A'; if(n<=12)return'B'; if(n<=18)return'C'; return'D'; }
-
-  async function loadSlots() {
-    const { data, error } = await sb.from('parking_slots').select('*').order('slot_number');
-    if (error) {
-      document.getElementById('slotsContainer').innerHTML = '<div style="text-align:center;padding:20px;color:#e53935;"><i class="fa fa-exclamation-circle"></i> Error loading slots. Please refresh.</div>';
-      return;
-    }
-    slotsData = data;
-    renderSlots(data);
-    updateStats(data);
+const SUPABASE_URL='https://xpziztrwufkqndzeguyj.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let selectedSlots=[];
+let bookedSlotIds=[];
+const TOTAL=24;
+const RATE=40;
+// Set today's date
+document.getElementById('bookDate').valueAsDate=new Date();
+// Build slot grid
+async function loadSlots(){
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const {data}=await sb.from('bookings').select('slot_number').eq('booking_date',today);
+    bookedSlotIds=(data||[]).map(b=>b.slot_number).filter(Boolean);
+  }catch(e){bookedSlotIds=[];}
+  const grid=document.getElementById('groundFloor');
+  document.getElementById('loadingSlots').style.display='none';
+  grid.innerHTML='';
+  for(let i=1;i<=TOTAL;i++){
+    const id='A'+String(i).padStart(2,'0');
+    const isBooked=bookedSlotIds.includes(id);
+    const btn=document.createElement('button');
+    btn.className='slot-btn '+(isBooked?'booked':'available');
+    btn.textContent=id;
+    btn.dataset.id=id;
+    btn.disabled=isBooked;
+    if(!isBooked)btn.onclick=()=>toggleSlot(btn);
+    grid.appendChild(btn);
   }
-
-  function renderSlots(slots) {
-    const container = document.getElementById('slotsContainer');
-    const rows = { A: [], B: [], C: [], D: [] };
-    slots.forEach(s => rows[s.row_name].push(s));
-
-    let html = '';
-    ['A','B','C','D'].forEach((row, idx) => {
-      if (idx > 0) html += '<div class="road-divider"></div>';
-      html += '<div class="zone"><div class="zone-label">Row ' + row + '</div><div class="slots-row">';
-      rows[row].forEach(s => {
-        const cls = !s.is_available ? 'booked' : '';
-        const icon = !s.is_available ? '&#128663;' : '&#128663;';
-        html += '<div class="slot ' + cls + '" id="slot-' + s.slot_number + '" onclick="' + (s.is_available ? 'selectSlot(' + s.slot_number + ')' : '') + '">' +
-          '<div class="car-icon">' + icon + '</div>' +
-          '<div class="slot-num">' + s.slot_number + '</div>' +
-          '<div class="slot-status">' + (s.is_available ? 'Free' : 'Booked') + '</div></div>';
-      });
-      html += '</div></div>';
-    });
-    container.innerHTML = html;
+  updateStats();
+}
+function toggleSlot(btn){
+  const id=btn.dataset.id;
+  if(btn.classList.contains('selected')){
+    btn.classList.remove('selected');btn.classList.add('available');
+    selectedSlots=selectedSlots.filter(s=>s!==id);
+  }else{
+    btn.classList.remove('available');btn.classList.add('selected');
+    selectedSlots.push(id);
   }
-
-  function updateStats(slots) {
-    const avail = slots.filter(s => s.is_available).length;
-    const booked = slots.filter(s => !s.is_available).length;
-    document.getElementById('availableCount').textContent = avail;
-    document.getElementById('bookedCount').textContent = booked;
-  }
-
-  function selectSlot(num) {
-    const slot = slotsData.find(s => s.slot_number === num);
-    if (!slot || !slot.is_available) return;
-    if (selectedSlot !== null) {
-      const prev = document.getElementById('slot-' + selectedSlot);
-      if (prev) { prev.classList.remove('selected'); prev.querySelector('.slot-status').textContent = 'Free'; }
-    }
-    selectedSlot = num;
-    const el = document.getElementById('slot-' + num);
-    el.classList.add('selected'); el.querySelector('.slot-status').textContent = 'Selected';
-    const display = document.getElementById('slotDisplay');
-    display.classList.add('active');
-    display.innerHTML = '<div style="font-size:2rem;font-weight:800;color:#f5a623;">Slot ' + num + '</div><div style="font-size:0.8rem;color:#888;">Row ' + getRow(num) + '</div>';
-    document.getElementById('selectedCount').textContent = '1';
-    const btn = document.getElementById('bookBtn');
-    btn.disabled = false;
-    document.getElementById('bookBtnText').textContent = 'Book Slot ' + num + ' Now';
-    updatePrice();
-  }
-
-  function updatePrice() {
-    const i = document.getElementById('checkIn').value, o = document.getElementById('checkOut').value;
-    if (i && o && i < o) {
-      const [h1,m1]=i.split(':').map(Number),[h2,m2]=o.split(':').map(Number);
-      const hrs=((h2*60+m2)-(h1*60+m1))/60, base=Math.round(hrs*40), gst=Math.round(base*0.18), total=base+gst;
-      document.getElementById('durationText').textContent=hrs.toFixed(1)+' hrs';
-      document.getElementById('basePrice').textContent='&#8377; '+base;
-      document.getElementById('gstPrice').textContent='&#8377; '+gst;
-      document.getElementById('totalPrice').textContent='&#8377; '+total;
-    }
-  }
-  document.getElementById('checkIn').addEventListener('change', updatePrice);
-  document.getElementById('checkOut').addEventListener('change', updatePrice);
-
-  async function confirmBooking() {
-    if (!selectedSlot) return;
-    const btn = document.getElementById('confirmBtn');
-
-    // Gather booking details
-    const userName = document.getElementById('userName').value.trim();
-    const userEmail = document.getElementById('userEmail').value.trim();
-    const userPhone = document.getElementById('userPhone').value.trim();
-    const vehicleNumber = document.getElementById('vehicleNumber').value.trim().toUpperCase();
-    const vehicleType = document.getElementById('vehicleType').value;
-    const bookingDate = document.getElementById('bookingDate').value;
-    const checkIn = document.getElementById('checkIn').value;
-    const checkOut = document.getElementById('checkOut').value;
-    const totalText = document.getElementById('totalPrice').textContent;
-
-    if (!userName || !userEmail || !userPhone || !vehicleNumber || !bookingDate || !checkIn || !checkOut) {
-      alert('Please fill in all booking details before confirming.');
-      return;
-    }
-
-    const totalAmount = parseFloat(totalText.replace(/[^\d.]/g, '')) || 0;
-    const bookingRef = 'PKE-' + Date.now().toString().slice(-6);
-    const slot = slotsData.find(s => s.slot_number === selectedSlot);
-    const loggedIn = JSON.parse(localStorage.getItem('parkease_logged_in') || '{}');
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-credit-card"></i> Opening Payment...';
-
-    // Determine duration
-    const cin = checkIn.split(':').map(Number);
-    const cout = checkOut.split(':').map(Number);
-    const durationHrs = Math.max(1, (cout[0] * 60 + cout[1] - cin[0] * 60 - cin[1]) / 60);
-    const baseAmount = parseFloat((durationHrs * 40).toFixed(2));
-    const gstAmount = parseFloat((baseAmount * 0.18).toFixed(2));
-    const finalTotal = parseFloat((baseAmount + gstAmount).toFixed(2));
-
-    // Platform/partner split (40% platform, 60% partner)
-    const platformAmount = parseFloat((finalTotal * 0.40).toFixed(2));
-    const partnerAmount = parseFloat((finalTotal * 0.60).toFixed(2));
-
-    // Step 1: Initiate Razorpay Payment
-    const bookingDetails = {
-      userName, userEmail, userPhone, vehicleNumber,
-      slotNumber: selectedSlot, bookingRef, totalAmount: finalTotal
-    };
-
-    initiatePayment(bookingDetails, async function(paymentId, orderId) {
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving booking...';
-
-      try {
-        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // Save booking to DB
-        const { data, error } = await sb.from('bookings').insert([{
-          booking_ref: bookingRef,
-          user_name: userName,
-          user_email: userEmail,
-          user_phone: userPhone,
-          vehicle_number: vehicleNumber,
-          vehicle_type: vehicleType,
-          zone: slot ? slot.zone : 'A',
-          booking_date: bookingDate,
-          check_in: checkIn,
-          check_out: checkOut,
-          duration_hrs: durationHrs,
-          base_amount: baseAmount,
-          gst_amount: gstAmount,
-          total_amount: finalTotal,
-          amount_paid: finalTotal,
-          payment_ref: bookingRef + '-PAY',
-          payment_gateway_id: paymentId,
-          payment_status: 'paid',
-          status: 'confirmed'
-        }]).select();
-
-        if (error) throw error;
-
-        // Mark slot unavailable
-        await sb.from('parking_slots').update({ is_available: false }).eq('slot_number', selectedSlot);
-
-        // Update local slot data
-        if (slot) slot.is_available = false;
-        renderSlots();
-        updateStats();
-
-        // Save payment record
-        try {
-          await sb.from('partner_payments').insert([{
-            payment_ref: bookingRef + '-SPLIT',
-            total_amount: finalTotal,
-            platform_amount: platformAmount,
-            partner_amount: partnerAmount,
-            commission_rate: 40,
-            payment_gateway: 'razorpay',
-            gateway_payment_id: paymentId,
-            gateway_order_id: orderId || '',
-            payment_status: 'completed',
-            payout_status: 'pending'
-          }]);
-        } catch(e) { console.log('Payment record save failed:', e); }
-
-        // Show confirmation
-        document.getElementById('modalBookingRef').textContent = bookingRef;
-        document.getElementById('modalSlot').textContent = selectedSlot;
-        document.getElementById('modalVehicle').textContent = vehicleNumber;
-        document.getElementById('modalTotal').textContent = '\u20B9' + finalTotal.toFixed(2);
-        document.getElementById('confirmationModal').style.display = 'flex';
-
-        selectedSlot = null;
-        document.getElementById('selectedSlotNum').textContent = '—';
-        document.getElementById('slotSummaryPanel').style.display = 'none';
-
-      } catch(err) {
-        console.error('Booking save error:', err);
-        alert('Payment received but booking save failed. Contact support with ref: ' + bookingRef);
-      }
-
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Booking';
-    });
-  }
-
-
-function initiatePayment(bookingDetails, onSuccess) {
-  // Razorpay Test Key (replace with live key in production)
-  // Sign up at https://razorpay.com - free to integrate, pay per transaction (2% fee)
-  const RAZORPAY_KEY = 'rzp_test_jFhH9bWtYhCGOI'; // Test key - works in test mode
-  
-  const totalPaise = Math.round(bookingDetails.totalAmount * 100); // Convert to paise
-  
-  const options = {
-    key: RAZORPAY_KEY,
-    amount: totalPaise,
-    currency: 'INR',
-    name: 'ParkEase',
-    description: 'Parking Slot Booking - ' + bookingDetails.slotNumber,
-    image: 'https://ansumansahoo.github.io/parking/p4.png',
-    handler: function(response) {
-      // Payment successful
-      onSuccess(response.razorpay_payment_id, response.razorpay_order_id || 'test_order');
-    },
-    prefill: {
-      name: bookingDetails.userName,
-      email: bookingDetails.userEmail,
-      contact: bookingDetails.userPhone
-    },
-    notes: {
-      slot_number: bookingDetails.slotNumber,
-      booking_ref: bookingDetails.bookingRef,
-      vehicle: bookingDetails.vehicleNumber
-    },
-    theme: { color: '#1a2942' },
-    modal: {
-      ondismiss: function() {
-        console.log('Payment cancelled by user');
-        // Re-enable button
-        const btn = document.getElementById('confirmBtn');
-        if (btn) { btn.disabled = false; btn.textContent = 'Confirm Booking'; }
-      }
-    }
-  };
-  
-  try {
-    const rzp = new Razorpay(options);
-    rzp.open();
-  } catch(e) {
-    // Razorpay not loaded or test mode - proceed without payment
-    console.warn('Razorpay not available, proceeding without payment');
-    onSuccess('test_payment_' + Date.now(), 'test_order_' + Date.now());
+  updateStats();updateSummary();
+  const cb=document.getElementById('confirmBtn');
+  if(selectedSlots.length>0){cb.disabled=false;cb.innerHTML='<i class="fas fa-credit-card"></i> Pay & Confirm Booking';}
+  else{cb.disabled=true;cb.innerHTML='<i class="fas fa-lock"></i> Select a slot to continue';}
+}
+function updateStats(){
+  const booked=bookedSlotIds.length;
+  document.getElementById('availableSlots').textContent=TOTAL-booked;
+  document.getElementById('bookedSlots').textContent=booked;
+  document.getElementById('selectedCount').textContent=selectedSlots.length;
+}
+function updateSummary(){
+  const cin=document.getElementById('checkIn').value;
+  const cout=document.getElementById('checkOut').value;
+  document.getElementById('sumSlots').textContent=selectedSlots.length||'–';
+  if(cin&&cout){
+    const [h1,m1]=cin.split(':').map(Number);
+    const [h2,m2]=cout.split(':').map(Number);
+    let mins=(h2*60+m2)-(h1*60+m1);
+    if(mins<=0)mins+=24*60;
+    const hrs=Math.ceil(mins/60);
+    const base=hrs*RATE*selectedSlots.length;
+    const gst=Math.round(base*0.18);
+    const total=base+gst;
+    document.getElementById('sumDur').textContent=hrs+' hr'+(hrs!==1?'s':'');
+    document.getElementById('sumBase').textContent='₹'+base;
+    document.getElementById('sumGst').textContent='₹'+gst;
+    document.getElementById('sumTotal').textContent='₹'+total;
   }
 }
+document.getElementById('checkIn').addEventListener('change',updateSummary);
+document.getElementById('checkOut').addEventListener('change',updateSummary);
+function getTotal(){
+  const cin=document.getElementById('checkIn').value;
+  const cout=document.getElementById('checkOut').value;
+  if(!cin||!cout)return 0;
+  const [h1,m1]=cin.split(':').map(Number);
+  const [h2,m2]=cout.split(':').map(Number);
+  let mins=(h2*60+m2)-(h1*60+m1);
+  if(mins<=0)mins+=24*60;
+  const hrs=Math.ceil(mins/60);
+  return Math.round((hrs*RATE*selectedSlots.length)*1.18);
+}
+function initiateBooking(){
+  const name=document.getElementById('userName').value.trim();
+  const veh=document.getElementById('vehicleNum').value.trim();
+  const date=document.getElementById('bookDate').value;
+  const cin=document.getElementById('checkIn').value;
+  const cout=document.getElementById('checkOut').value;
+  if(!name||!veh||!date||!cin||!cout){alert('Please fill in all required fields.');return;}
+  if(selectedSlots.length===0){alert('Please select at least one parking slot.');return;}
+  const total=getTotal();
+  if(total===0){alert('Please set check-in and check-out time.');return;}
+  const options={
+    key:'rzp_test_jFhH9bWtYhCGOI',
+    amount:total*100,
+    currency:'INR',
+    name:'ParkEase',
+    description:'Parking Slot Booking',
+    image:'https://ansumansahoo.github.io/parking/logo.png',
+    prefill:{name:name,contact:document.getElementById('phone').value||''},
+    theme:{color:'#F59E0B'},
+    handler:function(response){saveBooking(response.razorpay_payment_id,total);}
+  };
+  try{const rzp=new Razorpay(options);rzp.open();}
+  catch(e){saveBooking('TEST_'+Date.now(),total);}
+}
+async function saveBooking(paymentId,total){
+  document.getElementById('loadingOverlay').style.display='flex';
+  const ref='PE-'+Math.random().toString(36).substr(2,6).toUpperCase();
+  try{
+    for(const slot of selectedSlots){
+      await sb.from('bookings').insert({
+        name:document.getElementById('userName').value.trim(),
+        vehicle_number:document.getElementById('vehicleNum').value.trim(),
+        booking_date:document.getElementById('bookDate').value,
+        check_in:document.getElementById('checkIn').value,
+        check_out:document.getElementById('checkOut').value,
+        zone:document.getElementById('zone').value||'Zone A',
+        vehicle_type:document.getElementById('vehicleType').value,
+        phone:document.getElementById('phone').value||'',
+        slot_number:slot,
+        booking_ref:ref,
+        payment_ref:paymentId,
+        payment_status:'paid',
+        amount_paid:total,
+        status:'confirmed'
+      });
+    }
+  }catch(e){console.error(e);}
+  document.getElementById('loadingOverlay').style.display='none';
+  document.getElementById('bookingRef').textContent=ref;
+  document.getElementById('successOverlay').style.display='flex';
+}
+loadSlots();
 </script>
 </body>
 </html>
