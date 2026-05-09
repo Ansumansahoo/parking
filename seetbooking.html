@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Slot Booking - ParkEase</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; min-height: 100vh; }
@@ -12,189 +13,158 @@
     .nav-brand { font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
     .nav-brand span { color: #f5a623; }
     .nav-links { display: flex; gap: 28px; list-style: none; }
-    .nav-links a { color: #c8d6e5; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a { color: #c8d6e5; text-decoration: none; font-size: 0.9rem; font-weight: 500; }
     .nav-links a:hover { color: #f5a623; }
     .nav-btns { display: flex; gap: 10px; }
-    .btn-outline { border: 1.5px solid #f5a623; color: #f5a623; background: transparent; padding: 7px 18px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; text-decoration: none; }
-    .btn-outline:hover { background: #f5a623; color: #fff; }
-    .btn-nav { background: #f5a623; color: #fff; border: none; padding: 7px 18px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+    .btn-outline { border: 1.5px solid #f5a623; color: #f5a623; background: transparent; padding: 7px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+    .btn-nav { background: #f5a623; color: #fff; border: none; padding: 7px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
     .page-header { background: linear-gradient(135deg, #1a2942 0%, #2d4a7a 100%); color: white; padding: 40px 32px 36px; text-align: center; }
     .page-header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
-    .page-header p { color: #c8d6e5; font-size: 1rem; }
-    .main-container { max-width: 1200px; margin: 0 auto; padding: 36px 20px; display: grid; grid-template-columns: 1fr 380px; gap: 28px; }
-    .details-card { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-    .details-card h2 { font-size: 1.2rem; font-weight: 700; color: #1a2942; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-    .details-card h2 i { color: #f5a623; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group label { font-size: 0.8rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
-    .form-group input, .form-group select { padding: 10px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; color: #1a2942; background: #f8fafc; transition: border-color 0.2s; outline: none; }
+    .page-header p { color: #c8d6e5; }
+    .db-badge { background: rgba(67,160,71,0.2); border: 1px solid #43a047; border-radius: 20px; padding: 4px 14px; font-size: 0.78rem; color: #81c784; display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; }
+    .main-container { max-width: 1200px; margin: 0 auto; padding: 28px 20px; display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
+    .details-card, .slot-section, .summary-card, .info-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+    .card-title { font-size: 1.1rem; font-weight: 700; color: #1a2942; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .card-title i { color: #f5a623; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 0.78rem; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group input, .form-group select { padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.92rem; color: #1a2942; background: #f8fafc; outline: none; transition: border-color 0.2s; font-family: inherit; }
     .form-group input:focus, .form-group select:focus { border-color: #f5a623; background: white; }
-    .slot-section { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-    .slot-section h2 { font-size: 1.2rem; font-weight: 700; color: #1a2942; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
-    .slot-section h2 i { color: #f5a623; }
-    .slot-section > p { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
-    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
-    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: #555; font-weight: 500; }
-    .legend-dot { width: 16px; height: 16px; border-radius: 4px; }
-    .dot-available { background: #e8f5e9; border: 2px solid #43a047; }
-    .dot-booked { background: #ffebee; border: 2px solid #e53935; }
-    .dot-selected { background: #fff8e1; border: 2px solid #f5a623; }
-    .dot-disabled { background: #eceff1; border: 2px solid #90a4ae; }
-    .parking-area { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px; }
-    .entry-exit { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .entry-badge, .exit-badge { background: #1a2942; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
-    .exit-badge { background: #e53935; }
-    .road-label { font-size: 0.75rem; color: #90a4ae; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
-    .zones-container { display: flex; flex-direction: column; gap: 16px; }
-    .zone-label { font-size: 0.72rem; font-weight: 700; color: #90a4ae; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
-    .slots-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-    .slot { background: #e8f5e9; border: 2px solid #43a047; border-radius: 8px; padding: 10px 4px; text-align: center; cursor: pointer; transition: all 0.2s; }
-    .slot:hover:not(.booked):not(.disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,166,35,0.4); border-color: #f5a623; background: #fff8e1; }
+    .stats-bar { max-width: 1200px; margin: 0 auto; padding: 0 20px 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; background: white; border-radius: 16px; padding: 18px 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.07); margin-top: 20px; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 1.6rem; font-weight: 800; }
+    .stat-label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-num.c1 { color: #1a2942; } .stat-num.c2 { color: #43a047; } .stat-num.c3 { color: #e53935; } .stat-num.c4 { color: #f5a623; }
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #555; font-weight: 500; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 3px; }
+    .dot-a { background: #e8f5e9; border: 2px solid #43a047; } .dot-b { background: #ffebee; border: 2px solid #e53935; } .dot-s { background: #fff8e1; border: 2px solid #f5a623; }
+    .parking-area { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 18px; }
+    .entry-exit { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .badge { padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .badge.entry { background: #1a2942; color: white; } .badge.exit { background: #e53935; color: white; }
+    .zones-container { display: flex; flex-direction: column; gap: 14px; }
+    .zone-label { font-size: 0.7rem; font-weight: 700; color: #90a4ae; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 7px; }
+    .slots-row { display: grid; grid-template-columns: repeat(6,1fr); gap: 7px; }
+    .slot { background: #e8f5e9; border: 2px solid #43a047; border-radius: 8px; padding: 9px 4px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .slot:hover:not(.booked):not(.loading) { transform: translateY(-2px); border-color: #f5a623; background: #fff8e1; }
     .slot.booked { background: #ffebee; border-color: #e53935; cursor: not-allowed; }
-    .slot.selected { background: #fff8e1; border-color: #f5a623; box-shadow: 0 0 0 3px rgba(245,166,35,0.25); }
-    .slot-num { font-size: 0.85rem; font-weight: 700; color: #1a2942; }
-    .slot-status { font-size: 0.65rem; color: #888; margin-top: 2px; }
-    .slot.booked .slot-num { color: #e53935; }
-    .slot.booked .slot-status { color: #e53935; }
-    .slot.selected .slot-status { color: #f5a623; }
-    .slot.selected .slot-num { color: #f5a623; }
-    .slot .car-icon { font-size: 1.1rem; margin-bottom: 3px; }
-    .slot.booked .car-icon { filter: grayscale(1); opacity: 0.5; }
-    .road-divider { height: 28px; background: #e2e8f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; color: #90a4ae; font-weight: 600; letter-spacing: 1px; margin: 4px 0; }
+    .slot.selected { background: #fff8e1; border-color: #f5a623; box-shadow: 0 0 0 3px rgba(245,166,35,0.2); }
+    .slot.loading { opacity: 0.5; cursor: wait; }
+    .slot-num { font-size: 0.82rem; font-weight: 700; color: #1a2942; }
+    .slot-status { font-size: 0.62rem; color: #888; margin-top: 2px; }
+    .slot.booked .slot-num { color: #e53935; } .slot.booked .slot-status { color: #e53935; }
+    .slot.selected .slot-num { color: #f5a623; } .slot.selected .slot-status { color: #f5a623; }
+    .car-icon { font-size: 1rem; margin-bottom: 2px; }
+    .road-divider { height: 24px; background: #e2e8f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; color: #90a4ae; font-weight: 600; letter-spacing: 1px; }
     .road-divider::before { content: 'DRIVING LANE'; }
-    .sidebar { display: flex; flex-direction: column; gap: 20px; }
-    .summary-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-    .summary-card h3 { font-size: 1rem; font-weight: 700; color: #1a2942; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .summary-card h3 i { color: #f5a623; }
-    .selected-slot-display { background: #fff8e1; border: 2px solid #f5a623; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 16px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .selected-slot-display.empty { background: #f8fafc; border-color: #e2e8f0; }
-    .slot-big { font-size: 2.2rem; font-weight: 800; color: #f5a623; }
-    .slot-big-label { font-size: 0.8rem; color: #888; margin-top: 2px; }
-    .selected-slot-display.empty .slot-big { font-size: 0.9rem; color: #90a4ae; font-weight: 500; }
-    .price-breakdown { border-top: 1px solid #f0f4f8; padding-top: 16px; }
-    .price-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: #555; padding: 5px 0; }
-    .price-row.total { font-weight: 700; color: #1a2942; font-size: 1rem; border-top: 1px dashed #e2e8f0; margin-top: 8px; padding-top: 12px; }
-    .price-row.total span:last-child { color: #f5a623; font-size: 1.1rem; }
-    .info-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-    .info-card h3 { font-size: 0.95rem; font-weight: 700; color: #1a2942; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-    .info-card h3 i { color: #f5a623; }
-    .info-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f4f8; font-size: 0.85rem; color: #555; }
+    .sidebar { display: flex; flex-direction: column; gap: 18px; }
+    .selected-slot-display { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 14px; min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .selected-slot-display.active { background: #fff8e1; border-color: #f5a623; }
+    .price-breakdown { border-top: 1px solid #f0f4f8; padding-top: 14px; }
+    .price-row { display: flex; justify-content: space-between; font-size: 0.84rem; color: #555; padding: 4px 0; }
+    .price-row.total { font-weight: 700; color: #1a2942; font-size: 0.95rem; border-top: 1px dashed #e2e8f0; margin-top: 8px; padding-top: 10px; }
+    .price-row.total span:last-child { color: #f5a623; }
+    .info-item { display: flex; align-items: flex-start; gap: 9px; padding: 7px 0; border-bottom: 1px solid #f0f4f8; font-size: 0.83rem; color: #555; }
     .info-item:last-child { border-bottom: none; }
-    .info-item i { color: #f5a623; font-size: 0.9rem; margin-top: 2px; flex-shrink: 0; }
-    .submit-section { margin-top: 28px; }
-    .btn-book { width: 100%; background: linear-gradient(135deg, #f5a623, #e8941a); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .btn-book:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
+    .info-item i { color: #f5a623; font-size: 0.85rem; margin-top: 2px; flex-shrink: 0; }
+    .btn-book { width: 100%; background: linear-gradient(135deg, #f5a623, #e8941a); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
+    .btn-book:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
     .btn-book:disabled { background: #e2e8f0; color: #90a4ae; cursor: not-allowed; transform: none; box-shadow: none; }
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
     .modal-overlay.active { display: flex; }
-    .modal { background: white; border-radius: 20px; padding: 40px 36px; max-width: 460px; width: 90%; text-align: center; animation: popIn 0.3s ease; }
+    .modal { background: white; border-radius: 20px; padding: 36px; max-width: 440px; width: 90%; text-align: center; animation: popIn 0.3s ease; }
     @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .modal-icon { font-size: 3.5rem; color: #43a047; margin-bottom: 16px; }
-    .modal h2 { font-size: 1.6rem; font-weight: 800; color: #1a2942; margin-bottom: 8px; }
-    .modal p { color: #555; font-size: 0.95rem; margin-bottom: 20px; }
-    .modal-details { background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: left; }
-    .modal-detail-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.9rem; border-bottom: 1px solid #e2e8f0; }
-    .modal-detail-row:last-child { border-bottom: none; }
-    .modal-detail-row span:first-child { color: #888; }
-    .modal-detail-row span:last-child { font-weight: 600; color: #1a2942; }
-    .modal-id { background: #fff8e1; border: 2px dashed #f5a623; border-radius: 8px; padding: 10px 16px; font-size: 1.1rem; font-weight: 800; color: #f5a623; letter-spacing: 2px; margin-bottom: 24px; }
-    .btn-modal-primary { background: #f5a623; color: white; border: none; padding: 12px 32px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; }
-    .btn-modal-primary:hover { background: #e8941a; }
-    .stats-bar { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; background: white; border-radius: 16px; padding: 20px 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-top: 24px; }
-    .stat-item { text-align: center; }
-    .stat-num { font-size: 1.6rem; font-weight: 800; }
-    .stat-label { font-size: 0.78rem; color: #888; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-num.available { color: #43a047; }
-    .stat-num.booked-clr { color: #e53935; }
-    .stat-num.total-clr { color: #1a2942; }
-    .stat-num.selected-clr { color: #f5a623; }
-    footer { background: #1a2942; color: #c8d6e5; text-align: center; padding: 24px; margin-top: 48px; font-size: 0.85rem; }
+    .modal-icon { font-size: 3rem; color: #43a047; margin-bottom: 14px; }
+    .modal h2 { font-size: 1.5rem; font-weight: 800; color: #1a2942; margin-bottom: 8px; }
+    .modal p { color: #555; font-size: 0.9rem; margin-bottom: 16px; }
+    .modal-id { background: #fff8e1; border: 2px dashed #f5a623; border-radius: 8px; padding: 10px 16px; font-size: 1.1rem; font-weight: 800; color: #f5a623; letter-spacing: 2px; margin-bottom: 20px; }
+    .modal-details { background: #f8fafc; border-radius: 10px; padding: 14px; margin-bottom: 20px; text-align: left; }
+    .modal-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.87rem; border-bottom: 1px solid #e2e8f0; }
+    .modal-row:last-child { border-bottom: none; }
+    .modal-row span:first-child { color: #888; } .modal-row span:last-child { font-weight: 600; color: #1a2942; }
+    .btn-modal { background: #f5a623; color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; }
+    .loading-slots { text-align: center; padding: 30px; color: #888; }
+    footer { background: #1a2942; color: #c8d6e5; text-align: center; padding: 20px; margin-top: 40px; font-size: 0.82rem; }
     footer a { color: #f5a623; text-decoration: none; }
-    @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } .slots-row { grid-template-columns: repeat(4, 1fr); } .stats-grid { grid-template-columns: repeat(2, 1fr); } .form-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 600px) { .slots-row { grid-template-columns: repeat(3, 1fr); } nav { padding: 0 16px; } .nav-links { display: none; } }
+    @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } .slots-row { grid-template-columns: repeat(4,1fr); } .stats-grid { grid-template-columns: repeat(2,1fr); } .form-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 <nav>
   <a href="index.html" class="nav-brand">Park<span>Ease</span></a>
   <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="index-1.html">VIP Slots</a></li>
-    <li><a href="index-2.html">Special Offers</a></li>
-    <li><a href="index-3.html">Pricing</a></li>
-    <li><a href="index-4.html">Contact</a></li>
+    <li><a href="index.html">Home</a></li><li><a href="index-1.html">VIP Slots</a></li><li><a href="index-2.html">Special Offers</a></li><li><a href="index-3.html">Pricing</a></li><li><a href="index-4.html">Contact</a></li>
   </ul>
   <div class="nav-btns">
     <a href="login.html" class="btn-outline">Log In</a>
     <a href="signup.html" class="btn-nav">Sign Up</a>
   </div>
 </nav>
+
 <div class="page-header">
   <h1><i class="fa fa-map-marked-alt" style="color:#f5a623;margin-right:12px;"></i>Select Your Parking Slot</h1>
-  <p>Choose a slot, fill in your booking details, and confirm instantly</p>
+  <p>Real-time slot availability — Choose, book, and confirm instantly</p>
+  <div class="db-badge"><i class="fa fa-circle" style="font-size:0.5rem;color:#43a047;"></i> Live database connected</div>
 </div>
+
 <div class="stats-bar">
   <div class="stats-grid">
-    <div class="stat-item"><div class="stat-num total-clr" id="totalSlots">24</div><div class="stat-label">Total Slots</div></div>
-    <div class="stat-item"><div class="stat-num available" id="availableCount">17</div><div class="stat-label">Available</div></div>
-    <div class="stat-item"><div class="stat-num booked-clr" id="bookedCount">7</div><div class="stat-label">Booked</div></div>
-    <div class="stat-item"><div class="stat-num selected-clr" id="selectedCount">0</div><div class="stat-label">Selected</div></div>
+    <div class="stat-item"><div class="stat-num c1" id="totalSlots">24</div><div class="stat-label">Total Slots</div></div>
+    <div class="stat-item"><div class="stat-num c2" id="availableCount">-</div><div class="stat-label">Available</div></div>
+    <div class="stat-item"><div class="stat-num c3" id="bookedCount">-</div><div class="stat-label">Booked</div></div>
+    <div class="stat-item"><div class="stat-num c4" id="selectedCount">0</div><div class="stat-label">Selected</div></div>
   </div>
 </div>
+
 <div class="main-container">
-  <div style="display:flex;flex-direction:column;gap:24px;">
+  <div style="display:flex;flex-direction:column;gap:20px;">
     <div class="details-card">
-      <h2><i class="fa fa-calendar-check"></i> Booking Details</h2>
+      <div class="card-title"><i class="fa fa-calendar-check"></i> Booking Details</div>
       <div class="form-grid">
-        <div class="form-group"><label>User ID / Name</label><input type="text" id="userId" placeholder="Enter your name or ID" /></div>
-        <div class="form-group"><label>Vehicle Number</label><input type="text" id="vehicleNum" placeholder="e.g. OD 05 AB 1234" /></div>
+        <div class="form-group"><label>Name / User ID</label><input type="text" id="userId" placeholder="Your name or ID" /></div>
+        <div class="form-group"><label>Vehicle Number</label><input type="text" id="vehicleNum" placeholder="OD 05 AB 1234" /></div>
         <div class="form-group"><label>Date</label><input type="date" id="bookingDate" /></div>
-        <div class="form-group"><label>Zone / Location</label><select id="zone"><option value="">Select Zone</option><option value="Zone A - Bhubaneswar Central">Zone A - Bhubaneswar Central</option><option value="Zone B - Puri Beach">Zone B - Puri Beach</option><option value="Zone C - Cuttack Silver City">Zone C - Cuttack Silver City</option><option value="Zone D - BBSR Airport">Zone D - BBSR Airport</option></select></div>
-        <div class="form-group"><label>Check In Time</label><input type="time" id="checkIn" /></div>
-        <div class="form-group"><label>Check Out Time</label><input type="time" id="checkOut" /></div>
-        <div class="form-group"><label>Vehicle Type</label><select id="vehicleType"><option value="4-Wheeler">4-Wheeler Car</option><option value="2-Wheeler">2-Wheeler / Bike</option><option value="SUV">SUV / Large Vehicle</option><option value="EV">Electric Vehicle (EV)</option></select></div>
+        <div class="form-group"><label>Zone</label><select id="zone"><option value="">Select Zone</option><option>Zone A - Bhubaneswar Central</option><option>Zone B - Puri Beach</option><option>Zone C - Cuttack Silver City</option><option>Zone D - BBSR Airport</option></select></div>
+        <div class="form-group"><label>Check In</label><input type="time" id="checkIn" /></div>
+        <div class="form-group"><label>Check Out</label><input type="time" id="checkOut" /></div>
+        <div class="form-group"><label>Vehicle Type</label><select id="vehicleType"><option>4-Wheeler Car</option><option>2-Wheeler / Bike</option><option>SUV / Large Vehicle</option><option>Electric Vehicle (EV)</option></select></div>
         <div class="form-group"><label>Phone</label><input type="tel" id="phone" placeholder="+91 XXXXX XXXXX" /></div>
       </div>
     </div>
+
     <div class="slot-section">
-      <h2><i class="fa fa-parking"></i> Parking Layout</h2>
-      <p>Click a green slot to select. Red = Booked. Yellow = Your selection.</p>
+      <div class="card-title"><i class="fa fa-parking"></i> Parking Layout — Live Availability</div>
       <div class="legend">
-        <div class="legend-item"><div class="legend-dot dot-available"></div> Available</div>
-        <div class="legend-item"><div class="legend-dot dot-selected"></div> Selected</div>
-        <div class="legend-item"><div class="legend-dot dot-booked"></div> Booked</div>
+        <div class="legend-item"><div class="legend-dot dot-a"></div> Available</div>
+        <div class="legend-item"><div class="legend-dot dot-s"></div> Selected</div>
+        <div class="legend-item"><div class="legend-dot dot-b"></div> Booked</div>
       </div>
       <div class="parking-area">
         <div class="entry-exit">
-          <div class="entry-badge"><i class="fa fa-arrow-right"></i> ENTRY</div>
-          <div class="road-label">Ground Floor Parking</div>
-          <div class="exit-badge"><i class="fa fa-arrow-right"></i> EXIT</div>
+          <div class="badge entry"><i class="fa fa-arrow-right"></i> ENTRY</div>
+          <span style="font-size:0.72rem;color:#90a4ae;font-weight:600;">Ground Floor</span>
+          <div class="badge exit"><i class="fa fa-arrow-right"></i> EXIT</div>
         </div>
-        <div class="zones-container">
-          <div class="zone"><div class="zone-label">Row A</div><div class="slots-row" id="rowA"></div></div>
-          <div class="road-divider"></div>
-          <div class="zone"><div class="zone-label">Row B</div><div class="slots-row" id="rowB"></div></div>
-          <div class="road-divider"></div>
-          <div class="zone"><div class="zone-label">Row C</div><div class="slots-row" id="rowC"></div></div>
-          <div class="road-divider"></div>
-          <div class="zone"><div class="zone-label">Row D</div><div class="slots-row" id="rowD"></div></div>
+        <div class="zones-container" id="slotsContainer">
+          <div class="loading-slots"><i class="fa fa-spinner fa-spin" style="color:#f5a623;font-size:1.5rem;"></i><p style="margin-top:8px;">Loading live slot data...</p></div>
         </div>
       </div>
     </div>
-    <div class="submit-section">
-      <button class="btn-book" id="bookBtn" disabled onclick="confirmBooking()">
-        <i class="fa fa-check-circle"></i>
-        <span id="bookBtnText">Select a slot to continue</span>
-      </button>
-    </div>
+
+    <button class="btn-book" id="bookBtn" disabled onclick="confirmBooking()">
+      <i class="fa fa-check-circle"></i>
+      <span id="bookBtnText">Select a slot to continue</span>
+    </button>
   </div>
+
   <div class="sidebar">
     <div class="summary-card">
-      <h3><i class="fa fa-receipt"></i> Booking Summary</h3>
-      <div class="selected-slot-display empty" id="slotDisplay">
-        <div id="slotBigNum" style="font-size:0.9rem;color:#90a4ae;">No slot selected</div>
+      <div class="card-title"><i class="fa fa-receipt"></i> Booking Summary</div>
+      <div class="selected-slot-display" id="slotDisplay">
+        <div style="color:#90a4ae;font-size:0.88rem;">No slot selected</div>
       </div>
       <div class="price-breakdown">
         <div class="price-row"><span>Rate per hour</span><span>&#8377; 40</span></div>
@@ -205,67 +175,110 @@
       </div>
     </div>
     <div class="info-card">
-      <h3><i class="fa fa-info-circle"></i> Parking Info</h3>
-      <div class="info-item"><i class="fa fa-shield-alt"></i> 24/7 CCTV surveillance &amp; security</div>
-      <div class="info-item"><i class="fa fa-bolt"></i> EV charging available in Zone D</div>
-      <div class="info-item"><i class="fa fa-times-circle"></i> Free cancellation up to 2 hrs before</div>
-      <div class="info-item"><i class="fa fa-headset"></i> 24/7 Support: +91 98765 43210</div>
-      <div class="info-item"><i class="fa fa-rupee-sign"></i> Rate: &#8377;40/hr | Overnight: &#8377;300</div>
+      <div class="card-title"><i class="fa fa-info-circle"></i> Info</div>
+      <div class="info-item"><i class="fa fa-shield-alt"></i> 24/7 CCTV surveillance</div>
+      <div class="info-item"><i class="fa fa-bolt"></i> EV charging in Zone D</div>
+      <div class="info-item"><i class="fa fa-times-circle"></i> Free cancel up to 2hrs</div>
+      <div class="info-item"><i class="fa fa-headset"></i> +91 98765 43210</div>
+      <div class="info-item"><i class="fa fa-rupee-sign"></i> &#8377;40/hr | Overnight &#8377;300</div>
     </div>
   </div>
 </div>
+
 <div class="modal-overlay" id="confirmModal">
   <div class="modal">
     <div class="modal-icon"><i class="fa fa-check-circle"></i></div>
     <h2>Booking Confirmed!</h2>
-    <p>Your parking slot has been successfully reserved.</p>
+    <p>Your slot is reserved and saved to the database.</p>
     <div class="modal-id" id="bookingId">PKE-000000</div>
     <div class="modal-details">
-      <div class="modal-detail-row"><span>Slot</span><span id="conf-slot">--</span></div>
-      <div class="modal-detail-row"><span>Name</span><span id="conf-user">--</span></div>
-      <div class="modal-detail-row"><span>Vehicle</span><span id="conf-vehicle">--</span></div>
-      <div class="modal-detail-row"><span>Date</span><span id="conf-date">--</span></div>
-      <div class="modal-detail-row"><span>Check In</span><span id="conf-checkin">--</span></div>
-      <div class="modal-detail-row"><span>Check Out</span><span id="conf-checkout">--</span></div>
-      <div class="modal-detail-row"><span>Zone</span><span id="conf-zone">--</span></div>
-      <div class="modal-detail-row"><span>Total Paid</span><span id="conf-total" style="color:#f5a623;font-weight:800;">--</span></div>
+      <div class="modal-row"><span>Slot</span><span id="c-slot">--</span></div>
+      <div class="modal-row"><span>Name</span><span id="c-user">--</span></div>
+      <div class="modal-row"><span>Vehicle</span><span id="c-vehicle">--</span></div>
+      <div class="modal-row"><span>Date</span><span id="c-date">--</span></div>
+      <div class="modal-row"><span>Check In</span><span id="c-checkin">--</span></div>
+      <div class="modal-row"><span>Check Out</span><span id="c-checkout">--</span></div>
+      <div class="modal-row"><span>Total</span><span id="c-total" style="color:#f5a623;font-weight:800;">--</span></div>
     </div>
-    <button class="btn-modal-primary" onclick="closeModal()"><i class="fa fa-home" style="margin-right:8px;"></i>Back to Home</button>
+    <button class="btn-modal" onclick="closeModal()"><i class="fa fa-home" style="margin-right:8px;"></i>Back to Home</button>
   </div>
 </div>
-<footer><p>&#169; 2024 ParkEase. Smart Parking Management. | <a href="index.html">Home</a> | <a href="index-4.html">Contact</a></p></footer>
+
+<footer><p>&#169; 2024 ParkEase Smart Parking Management | <a href="index.html">Home</a> | <a href="index-4.html">Contact</a></p></footer>
+
 <script>
-  const bookedSlots = [3,7,9,14,17,20,22];
+  const SUPABASE_URL = 'https://xpziztrwufkqndzeguyj.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
   let selectedSlot = null;
-  function buildRow(id, start, count) {
-    const c = document.getElementById(id);
-    for (let i = start; i < start+count; i++) {
-      const d = document.createElement('div');
-      const isBooked = bookedSlots.includes(i);
-      d.className = 'slot' + (isBooked?' booked':'');
-      d.id = 'slot-'+i;
-      d.innerHTML = '<div class="car-icon">'+(isBooked?'&#128663;':'&#128663;')+'</div><div class="slot-num">'+i+'</div><div class="slot-status">'+(isBooked?'Booked':'Free')+'</div>';
-      if (!isBooked) d.addEventListener('click', function(){selectSlot(i);});
-      c.appendChild(d);
+  let slotsData = [];
+
+  function getRow(n) { if(n<=6)return'A'; if(n<=12)return'B'; if(n<=18)return'C'; return'D'; }
+
+  async function loadSlots() {
+    const { data, error } = await sb.from('parking_slots').select('*').order('slot_number');
+    if (error) {
+      document.getElementById('slotsContainer').innerHTML = '<div style="text-align:center;padding:20px;color:#e53935;"><i class="fa fa-exclamation-circle"></i> Error loading slots. Please refresh.</div>';
+      return;
     }
+    slotsData = data;
+    renderSlots(data);
+    updateStats(data);
   }
-  buildRow('rowA',1,6); buildRow('rowB',7,6); buildRow('rowC',13,6); buildRow('rowD',19,6);
+
+  function renderSlots(slots) {
+    const container = document.getElementById('slotsContainer');
+    const rows = { A: [], B: [], C: [], D: [] };
+    slots.forEach(s => rows[s.row_name].push(s));
+
+    let html = '';
+    ['A','B','C','D'].forEach((row, idx) => {
+      if (idx > 0) html += '<div class="road-divider"></div>';
+      html += '<div class="zone"><div class="zone-label">Row ' + row + '</div><div class="slots-row">';
+      rows[row].forEach(s => {
+        const cls = !s.is_available ? 'booked' : '';
+        const icon = !s.is_available ? '&#128663;' : '&#128663;';
+        html += '<div class="slot ' + cls + '" id="slot-' + s.slot_number + '" onclick="' + (s.is_available ? 'selectSlot(' + s.slot_number + ')' : '') + '">' +
+          '<div class="car-icon">' + icon + '</div>' +
+          '<div class="slot-num">' + s.slot_number + '</div>' +
+          '<div class="slot-status">' + (s.is_available ? 'Free' : 'Booked') + '</div></div>';
+      });
+      html += '</div></div>';
+    });
+    container.innerHTML = html;
+  }
+
+  function updateStats(slots) {
+    const avail = slots.filter(s => s.is_available).length;
+    const booked = slots.filter(s => !s.is_available).length;
+    document.getElementById('availableCount').textContent = avail;
+    document.getElementById('bookedCount').textContent = booked;
+  }
+
   function selectSlot(num) {
-    if (selectedSlot !== null) { const p = document.getElementById('slot-'+selectedSlot); if(p){p.classList.remove('selected');p.querySelector('.slot-status').textContent='Free';} }
+    const slot = slotsData.find(s => s.slot_number === num);
+    if (!slot || !slot.is_available) return;
+    if (selectedSlot !== null) {
+      const prev = document.getElementById('slot-' + selectedSlot);
+      if (prev) { prev.classList.remove('selected'); prev.querySelector('.slot-status').textContent = 'Free'; }
+    }
     selectedSlot = num;
-    const el = document.getElementById('slot-'+num);
-    el.classList.add('selected'); el.querySelector('.slot-status').textContent='Selected';
-    document.getElementById('slotDisplay').classList.remove('empty');
-    document.getElementById('slotBigNum').innerHTML = '<div class="slot-big">Slot '+num+'</div><div class="slot-big-label">Row '+getRow(num)+'</div>';
-    document.getElementById('selectedCount').textContent='1';
-    const btn = document.getElementById('bookBtn'); btn.disabled=false;
-    document.getElementById('bookBtnText').textContent='Book Slot '+num+' Now';
+    const el = document.getElementById('slot-' + num);
+    el.classList.add('selected'); el.querySelector('.slot-status').textContent = 'Selected';
+    const display = document.getElementById('slotDisplay');
+    display.classList.add('active');
+    display.innerHTML = '<div style="font-size:2rem;font-weight:800;color:#f5a623;">Slot ' + num + '</div><div style="font-size:0.8rem;color:#888;">Row ' + getRow(num) + '</div>';
+    document.getElementById('selectedCount').textContent = '1';
+    const btn = document.getElementById('bookBtn');
+    btn.disabled = false;
+    document.getElementById('bookBtnText').textContent = 'Book Slot ' + num + ' Now';
     updatePrice();
   }
-  function getRow(n){ if(n<=6)return'A'; if(n<=12)return'B'; if(n<=18)return'C'; return'D'; }
+
   function updatePrice() {
-    const i=document.getElementById('checkIn').value, o=document.getElementById('checkOut').value;
-    if(i&&o&&i<o){
+    const i = document.getElementById('checkIn').value, o = document.getElementById('checkOut').value;
+    if (i && o && i < o) {
       const [h1,m1]=i.split(':').map(Number),[h2,m2]=o.split(':').map(Number);
       const hrs=((h2*60+m2)-(h1*60+m1))/60, base=Math.round(hrs*40), gst=Math.round(base*0.18), total=base+gst;
       document.getElementById('durationText').textContent=hrs.toFixed(1)+' hrs';
@@ -274,30 +287,88 @@
       document.getElementById('totalPrice').textContent='&#8377; '+total;
     }
   }
-  document.getElementById('checkIn').addEventListener('change',updatePrice);
-  document.getElementById('checkOut').addEventListener('change',updatePrice);
-  function confirmBooking() {
-    if(!selectedSlot) return;
-    const userId=document.getElementById('userId').value||'Guest',vehicleNum=document.getElementById('vehicleNum').value||'--',date=document.getElementById('bookingDate').value||new Date().toISOString().split('T')[0],zone=document.getElementById('zone').value||'Zone A',checkIn=document.getElementById('checkIn').value||'--',checkOut=document.getElementById('checkOut').value||'--',total=document.getElementById('totalPrice').textContent,bookingId='PKE-'+Date.now().toString().slice(-6);
-    document.getElementById('conf-slot').textContent='Slot '+selectedSlot+' (Row '+getRow(selectedSlot)+')';
-    document.getElementById('conf-user').textContent=userId;
-    document.getElementById('conf-vehicle').textContent=vehicleNum;
-    document.getElementById('conf-date').textContent=date;
-    document.getElementById('conf-checkin').textContent=checkIn;
-    document.getElementById('conf-checkout').textContent=checkOut;
-    document.getElementById('conf-zone').textContent=zone;
-    document.getElementById('conf-total').textContent=total;
-    document.getElementById('bookingId').textContent=bookingId;
-    const el=document.getElementById('slot-'+selectedSlot);
-    el.classList.remove('selected'); el.classList.add('booked'); el.querySelector('.slot-status').textContent='Booked'; el.style.cursor='not-allowed';
-    document.getElementById('availableCount').textContent=parseInt(document.getElementById('availableCount').textContent)-1;
-    document.getElementById('bookedCount').textContent=parseInt(document.getElementById('bookedCount').textContent)+1;
-    document.getElementById('selectedCount').textContent='0';
+  document.getElementById('checkIn').addEventListener('change', updatePrice);
+  document.getElementById('checkOut').addEventListener('change', updatePrice);
+
+  async function confirmBooking() {
+    if (!selectedSlot) return;
+    const btn = document.getElementById('bookBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving to database...';
+
+    const userId = document.getElementById('userId').value || 'Guest';
+    const vehicleNum = document.getElementById('vehicleNum').value || '--';
+    const date = document.getElementById('bookingDate').value || new Date().toISOString().split('T')[0];
+    const zone = document.getElementById('zone').value || 'Zone A';
+    const checkIn = document.getElementById('checkIn').value;
+    const checkOut = document.getElementById('checkOut').value;
+    const vehicleType = document.getElementById('vehicleType').value;
+    const phone = document.getElementById('phone').value;
+    const total = document.getElementById('totalPrice').textContent;
+    const bookingRef = 'PKE-' + Date.now().toString().slice(-6);
+    const slot = slotsData.find(s => s.slot_number === selectedSlot);
+
+    // Get logged-in user
+    const loggedIn = JSON.parse(localStorage.getItem('parkease_logged_in') || '{}');
+
+    // Save booking to database
+    const { data, error } = await sb.from('bookings').insert([{
+      booking_ref: bookingRef,
+      user_id: loggedIn.id && loggedIn.id !== 'demo' ? loggedIn.id : null,
+      slot_id: slot ? slot.id : null,
+      user_name: userId,
+      user_phone: phone,
+      vehicle_number: vehicleNum,
+      vehicle_type: vehicleType,
+      zone: zone,
+      booking_date: date,
+      check_in: checkIn || '00:00',
+      check_out: checkOut || '00:00',
+      total_amount: parseFloat(total.replace('&#8377; ','')) || 0,
+      status: 'confirmed'
+    }]);
+
+    if (error) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-check-circle"></i> Book Slot ' + selectedSlot + ' Now';
+      alert('Booking error: ' + error.message);
+      return;
+    }
+
+    // Mark slot as unavailable
+    await sb.from('parking_slots').update({ is_available: false }).eq('slot_number', selectedSlot);
+
+    // Update UI
+    const el = document.getElementById('slot-' + selectedSlot);
+    el.classList.remove('selected'); el.classList.add('booked');
+    el.querySelector('.slot-status').textContent = 'Booked'; el.style.cursor = 'not-allowed';
+    el.onclick = null;
+    const slotObj = slotsData.find(s => s.slot_number === selectedSlot);
+    if (slotObj) slotObj.is_available = false;
+    document.getElementById('availableCount').textContent = parseInt(document.getElementById('availableCount').textContent) - 1;
+    document.getElementById('bookedCount').textContent = parseInt(document.getElementById('bookedCount').textContent) + 1;
+    document.getElementById('selectedCount').textContent = '0';
+
+    document.getElementById('c-slot').textContent = 'Slot ' + selectedSlot + ' (Row ' + getRow(selectedSlot) + ')';
+    document.getElementById('c-user').textContent = userId;
+    document.getElementById('c-vehicle').textContent = vehicleNum;
+    document.getElementById('c-date').textContent = date;
+    document.getElementById('c-checkin').textContent = checkIn || '--';
+    document.getElementById('c-checkout').textContent = checkOut || '--';
+    document.getElementById('c-total').textContent = total;
+    document.getElementById('bookingId').textContent = bookingRef;
+
     document.getElementById('confirmModal').classList.add('active');
-    selectedSlot=null;
+    selectedSlot = null;
   }
-  function closeModal(){ document.getElementById('confirmModal').classList.remove('active'); window.location.href='index.html'; }
-  document.getElementById('bookingDate').valueAsDate=new Date();
+
+  function closeModal() {
+    document.getElementById('confirmModal').classList.remove('active');
+    window.location.href = 'index.html';
+  }
+
+  document.getElementById('bookingDate').valueAsDate = new Date();
+  loadSlots();
 </script>
 </body>
 </html>
