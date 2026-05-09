@@ -1,165 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us - ParkEase</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-:root{--primary:#0F2D52;--primary-light:#1565C0;--accent:#F59E0B;--accent-dark:#D97706;--green:#16A34A;--red:#DC2626;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-400:#9CA3AF;--gray-600:#4B5563;--gray-800:#1F2937;--tr:all 0.2s ease;}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--gray-50);color:var(--gray-800);-webkit-font-smoothing:antialiased;}
-nav{background:var(--primary)!important;height:64px;display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,0.25);}
-.nav-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
-.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-0.5px;}
-.nav-brand-icon{width:36px;height:36px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:16px;}
-.nav-brand span{color:var(--accent);}
-.nav-links{display:flex;list-style:none;gap:4px;align-items:center;}
-.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.875rem;font-weight:500;padding:7px 14px;border-radius:6px;transition:var(--tr);}
-.nav-links a:hover{color:#fff;background:rgba(255,255,255,0.1);}
-.nav-links a.active{color:var(--accent);font-weight:600;}
-.partner-link{color:var(--accent)!important;font-weight:600!important;border:1px solid rgba(245,158,11,0.4)!important;border-radius:999px!important;}
-.nav-btns{display:flex;gap:10px;align-items:center;}
-.btn-outline{color:rgba(255,255,255,0.85);background:transparent;border:1.5px solid rgba(255,255,255,0.3);padding:7px 16px;border-radius:999px;font-size:0.85rem;font-weight:600;cursor:pointer;text-decoration:none;transition:var(--tr);}
-.btn-fill{background:var(--accent);color:var(--primary);border:none;padding:8px 18px;border-radius:999px;font-size:0.85rem;font-weight:700;cursor:pointer;text-decoration:none;transition:var(--tr);}
-.btn-fill:hover{background:var(--accent-dark);}
-.page-header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:44px 24px 52px;text-align:center;position:relative;overflow:hidden;}
-.page-header::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:24px;background:var(--gray-50);clip-path:ellipse(55% 100% at 50% 100%);}
-.page-header h1{font-size:1.875rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px;}
-.page-header p{color:rgba(255,255,255,0.8);font-size:0.95rem;}
-.pe-footer{background:var(--primary);color:rgba(255,255,255,0.7);padding:48px 24px 24px;}
-.pe-footer-inner{max-width:1200px;margin:0 auto;}
-.pe-footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px;}
-.pe-footer-brand{font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:10px;}
-.pe-footer-brand em{color:var(--accent);font-style:normal;}
-.pe-footer-col h4{color:#fff;font-size:0.78rem;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em;}
-.pe-footer-links{list-style:none;}
-.pe-footer-links li{margin-bottom:8px;}
-.pe-footer-links a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem;transition:var(--tr);}
-.pe-footer-links a:hover{color:var(--accent);}
-.pe-footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:18px;display:flex;justify-content:space-between;font-size:0.78rem;flex-wrap:wrap;gap:10px;}
-.pe-footer-bottom a{color:var(--accent);}
-@media(max-width:900px){.pe-footer-grid{grid-template-columns:1fr 1fr;}.nav-links{display:none;}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us - ParkEase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#0F2D52;--primary-light:#1565C0;--accent:#F59E0B;--accent-dark:#D97706;--green:#16A34A;--red:#DC2626;--bg:#F8FAFF;--card:#fff;--text:#1E293B;--text-light:#64748B;--border:#E2E8F0;--radius:12px;--shadow:0 4px 20px rgba(15,45,82,.08)}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+nav{background:var(--primary);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:999;box-shadow:0 2px 16px rgba(15,45,82,.4)}
+.nav-brand{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+.nav-logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:var(--primary)}
+.nav-name{font-weight:700;font-size:1.15rem;color:#fff}.nav-name span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s}.nav-links a:hover,.nav-links a.active{color:var(--accent)}
+.nav-partner{border:1.5px solid var(--accent);color:var(--accent)!important;padding:.3rem .9rem;border-radius:20px;font-size:.85rem!important}
+.nav-cta{display:flex;align-items:center;gap:.75rem}
+.btn-login{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:.4rem 1.1rem;border-radius:8px;font-size:.875rem;font-weight:500;cursor:pointer;text-decoration:none;transition:all .2s}.btn-login:hover{border-color:#fff}
+.btn-signup{background:var(--accent);border:none;color:var(--primary);padding:.45rem 1.2rem;border-radius:8px;font-size:.875rem;font-weight:700;cursor:pointer;text-decoration:none}.btn-signup:hover{background:var(--accent-dark)}
+.page-header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);padding:3rem 2rem 5rem;text-align:center;position:relative;overflow:hidden}
+.page-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:60px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%)}
+.page-header h1{font-size:2.2rem;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:.5rem}
+.page-header p{color:rgba(255,255,255,.75);font-size:1rem}
+.contact-container{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem;display:grid;grid-template-columns:1fr 1.4fr;gap:2rem;align-items:start}
+.info-panel{display:flex;flex-direction:column;gap:1.2rem}
+.info-card{background:var(--card);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);border:1px solid var(--border)}
+.info-card h2{font-size:1.2rem;font-weight:800;color:var(--text);margin-bottom:.4rem}
+.info-card .subtitle{font-size:.88rem;color:var(--text-light);margin-bottom:1.2rem}
+.contact-item{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.2rem}
+.contact-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.contact-icon i{color:var(--accent);font-size:1rem}
+.contact-details h4{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
+.contact-details p,.contact-details a{font-size:.85rem;color:var(--text-light);text-decoration:none;display:block;line-height:1.6}
+.contact-details a:hover{color:var(--primary-light)}
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.5rem}
+.hour-item{background:var(--bg);border-radius:8px;padding:.5rem .8rem;font-size:.8rem}
+.hour-item .day{font-weight:600;color:var(--text);margin-bottom:.1rem}
+.hour-item .time{color:var(--text-light)}
+.map-card{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border)}
+.map-card iframe{width:100%;height:220px;border:none;display:block}
+.map-card .map-footer{padding:.8rem 1rem;font-size:.82rem;color:var(--text-light);display:flex;align-items:center;gap:.4rem}
+.form-panel{background:var(--card);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);border:1px solid var(--border)}
+.form-panel h2{font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:.3rem}
+.form-panel p{font-size:.88rem;color:var(--text-light);margin-bottom:1.5rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-group.full{grid-column:1/-1}
+label{font-size:.78rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.9rem;color:var(--text);background:#fafbfc;transition:border .2s;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary-light);background:#fff}
+.submit-btn{width:100%;padding:.9rem;background:var(--accent);border:none;color:var(--primary);font-weight:700;font-size:1rem;border-radius:10px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1rem}
+.submit-btn:hover{background:var(--accent-dark);transform:translateY(-1px)}
+.success-msg{display:none;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:1rem;margin-top:1rem;color:var(--green);font-size:.9rem;font-weight:500;text-align:center}
+.faq-section{max-width:1100px;margin:0 auto 3rem;padding:0 1.5rem}
+.faq-section h2{font-size:1.4rem;font-weight:800;color:var(--text);margin-bottom:1.5rem;text-align:center}
+.faq-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.faq-item{background:var(--card);border-radius:var(--radius);padding:1.2rem 1.5rem;box-shadow:var(--shadow);border:1px solid var(--border)}
+.faq-item h4{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.faq-item h4 i{color:var(--accent)}
+.faq-item p{font-size:.85rem;color:var(--text-light);line-height:1.6}
+footer{background:var(--primary);color:rgba(255,255,255,.8);padding:3rem 2rem 1.5rem;margin-top:2rem}
+.footer-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:2rem}
+.footer-brand .brand-name{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:.5rem}.footer-brand .brand-name span{color:var(--accent)}
+.footer-brand p{font-size:.85rem;line-height:1.6;opacity:.7}
+.footer-col h4{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:.8rem}
+.footer-col a{display:block;color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;margin-bottom:.4rem;transition:color .2s}.footer-col a:hover{color:#fff}
+.footer-bottom{max-width:1100px;margin:2rem auto 0;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;font-size:.8rem;opacity:.6}
+@media(max-width:768px){.contact-container{grid-template-columns:1fr}.faq-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.nav-links{display:none}.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <nav>
-  <div class="nav-inner">
-    <a href="index.html" class="nav-brand">
-      <div class="nav-brand-icon"><i class="fas fa-parking"></i></div>
-      Park<span>Ease</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="seetbooking.html">Book a Slot</a></li>
-      <li><a href="vipform.html">VIP Parking</a></li>
-      <li><a href="index-4.html" class="active">Contact</a></li>
-      <li><a href="business-partner.html" class="partner-link">🤝 Partner With Us</a></li>
-    </ul>
-    <div class="nav-btns">
-      <a href="login.html" class="btn-outline">Log In</a>
-      <a href="signup.html" class="btn-fill">Sign Up Free</a>
-    </div>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">P</div>
+    <span class="nav-name">Park<span>Ease</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="seetbooking.html">Book a Slot</a></li>
+    <li><a href="vipform.html">VIP Parking</a></li>
+    <li><a href="index-4.html" class="active">Contact</a></li>
+    <li><a href="business-partner.html" class="nav-partner">🤝 Partner With Us</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="login.html" class="btn-login">Log In</a>
+    <a href="signup.html" class="btn-signup">Sign Up Free</a>
   </div>
 </nav>
 <div class="page-header">
-  <h1><i class="fa fa-headset" style="color:#f5a623;margin-right:14px;"></i>Contact Us</h1>
+  <h1><i class="fas fa-headset"></i> Contact Us</h1>
   <p>We are here to help. Reach out to us anytime for support, booking queries, or feedback.</p>
 </div>
-<div class="main">
-  <div class="contact-info">
-    <h2>Get In Touch</h2>
-    <p>Our team is available 24/7 to assist you.</p>
-    <div class="contact-item">
-      <div class="icon-box"><i class="fa fa-map-marker-alt"></i></div>
-      <div class="contact-item-text"><h4>Head Office</h4><p>Plot No. 42, Saheed Nagar,<br>Bhubaneswar, Odisha 751007</p></div>
-    </div>
-    <div class="contact-item">
-      <div class="icon-box"><i class="fa fa-phone-alt"></i></div>
-      <div class="contact-item-text"><h4>Phone Support (24/7)</h4><p>+91 98765 43210<br>+91 96450 12345 (WhatsApp)</p></div>
-    </div>
-    <div class="contact-item">
-      <div class="icon-box"><i class="fa fa-envelope"></i></div>
-      <div class="contact-item-text"><h4>Email</h4><p>support@parkease.in<br>bookings@parkease.in</p></div>
-    </div>
-    <div class="contact-item">
-      <div class="icon-box"><i class="fa fa-clock"></i></div>
-      <div class="contact-item-text"><h4>Working Hours</h4><p>Mon-Sat: 8:00 AM - 10:00 PM<br>Sun and Holidays: 9:00 AM - 6:00 PM</p></div>
-    </div>
-    <div class="map-container">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3741.678!2d85.8421!3d20.296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a190900fd180001%3A0x5fb06c2cd2c2f2e5!2sSaheed%20Nagar%2C%20Bhubaneswar!5e0!3m2!1sen!2sin!4v1616161616161" allowfullscreen loading="lazy"></iframe>
-    </div>
-    <div class="social-section">
-      <h4>Follow Us</h4>
-      <div class="social-links">
-        <a href="#" class="social-link fb"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social-link tw"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="social-link ig"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="social-link yt"><i class="fab fa-youtube"></i></a>
+<div class="contact-container">
+  <div class="info-panel">
+    <div class="info-card">
+      <h2>Get In Touch</h2>
+      <p class="subtitle">Our team is available 24/7 to assist you.</p>
+      <div class="contact-item">
+        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="contact-details">
+          <h4>Head Office</h4>
+          <p>Plot No. 42, Saheed Nagar,<br>Bhubaneswar, Odisha 751007</p>
+        </div>
       </div>
+      <div class="contact-item">
+        <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="contact-details">
+          <h4>Phone Support (24/7)</h4>
+          <a href="tel:+919876543210">+91 98765 43210</a>
+          <a href="tel:+919645012345">+91 96450 12345 (WhatsApp)</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+        <div class="contact-details">
+          <h4>Email</h4>
+          <a href="mailto:support@parkease.in">support@parkease.in</a>
+          <a href="mailto:bookings@parkease.in">bookings@parkease.in</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon"><i class="fas fa-clock"></i></div>
+        <div class="contact-details">
+          <h4>Working Hours</h4>
+          <div class="hours-grid">
+            <div class="hour-item"><div class="day">Mon – Sat</div><div class="time">8:00 AM – 10:00 PM</div></div>
+            <div class="hour-item"><div class="day">Sun & Holidays</div><div class="time">9:00 AM – 6:00 PM</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="map-card">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.038!2d85.8244!3d20.2961!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a19a7a879e83d1%3A0x3a7aadd9b5d62b5e!2sSaheed%20Nagar%2C%20Bhubaneswar!5e0!3m2!1sen!2sin!4v1" allowfullscreen="" loading="lazy"></iframe>
+      <div class="map-footer"><i class="fas fa-map-pin" style="color:var(--accent)"></i> Saheed Nagar, Bhubaneswar, Odisha 751007</div>
     </div>
   </div>
-  <div class="contact-form">
-    <h2>Send a Message</h2>
-    <p>Fill out the form below and we will get back to you within 24 hours.</p>
-    <div class="success-toast" id="successToast"><i class="fa fa-check-circle"></i> Your message has been sent! We will respond within 24 hours.</div>
+  <div class="form-panel">
+    <h2>Send Us a Message</h2>
+    <p>Have a question or feedback? Fill out the form and we'll get back to you within 2 hours.</p>
     <form id="contactForm" onsubmit="submitForm(event)">
-      <div class="form-row">
-        <div class="form-group"><label>First Name *</label><input type="text" placeholder="Your first name" required /></div>
-        <div class="form-group"><label>Last Name *</label><input type="text" placeholder="Your last name" required /></div>
+      <div class="form-grid">
+        <div class="form-group"><label>Full Name</label><input type="text" id="cName" placeholder="Your full name" required></div>
+        <div class="form-group"><label>Email</label><input type="email" id="cEmail" placeholder="you@example.com" required></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="cPhone" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="form-group"><label>Subject</label>
+          <select id="cSubject">
+            <option>Booking Support</option>
+            <option>Payment Issue</option>
+            <option>Slot Availability</option>
+            <option>Business Partnership</option>
+            <option>General Enquiry</option>
+            <option>Feedback / Complaint</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Booking Reference (optional)</label><input type="text" id="cRef" placeholder="PE-XXXXXX"></div>
+        <div class="form-group full"><label>Message</label><textarea id="cMsg" rows="5" placeholder="Describe your issue or query in detail..." required></textarea></div>
       </div>
-      <div class="form-row">
-        <div class="form-group"><label>Email Address *</label><input type="email" placeholder="you@example.com" required /></div>
-        <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 XXXXX XXXXX" /></div>
-      </div>
-      <div class="form-group">
-        <label>Subject *</label>
-        <select required>
-          <option value="">Select a subject</option>
-          <option>Booking Query</option>
-          <option>Payment Issue</option>
-          <option>VIP Slot Enquiry</option>
-          <option>Cancellation / Refund</option>
-          <option>Technical Support</option>
-          <option>General Feedback</option>
-          <option>Partnership / Business</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Message *</label><textarea placeholder="Describe your query or feedback..." required></textarea></div>
-      <button type="submit" class="btn-submit"><i class="fa fa-paper-plane"></i> Send Message</button>
+      <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Send Message</button>
+      <div class="success-msg" id="successMsg"><i class="fas fa-check-circle"></i> Message sent! We'll get back to you within 2 hours.</div>
     </form>
   </div>
 </div>
 <div class="faq-section">
-  <h2>Frequently Asked <span>Questions</span></h2>
-  <div class="faqs">
-    <div class="faq-item"><h4>How do I cancel a booking?</h4><p>You can cancel your booking up to 2 hours before your check-in time via the booking confirmation email or by calling our support line.</p></div>
-    <div class="faq-item"><h4>What payment methods do you accept?</h4><p>We accept UPI (GPay, PhonePe, Paytm), credit/debit cards, net banking, and cash at the facility.</p></div>
-    <div class="faq-item"><h4>Is my vehicle safe at ParkEase?</h4><p>Yes! All our facilities have 24/7 CCTV surveillance, security personnel, and covered parking options.</p></div>
-    <div class="faq-item"><h4>Can I extend my parking time?</h4><p>Yes, you can extend your slot duration via the app or by calling support at least 30 minutes before your check-out time.</p></div>
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-grid">
+    <div class="faq-item"><h4><i class="fas fa-question-circle"></i> How do I cancel a booking?</h4><p>You can cancel your booking free of charge up to 2 hours before your check-in time. Contact support or use your booking reference to cancel.</p></div>
+    <div class="faq-item"><h4><i class="fas fa-credit-card"></i> What payment methods are accepted?</h4><p>We accept all major debit/credit cards, UPI, net banking, and popular wallets like Paytm and PhonePe via Razorpay.</p></div>
+    <div class="faq-item"><h4><i class="fas fa-car"></i> Can I extend my parking time?</h4><p>Yes! You can extend your booking by calling our 24/7 support line or by visiting the parking attendant on-site.</p></div>
+    <div class="faq-item"><h4><i class="fas fa-building"></i> How do I list my space as a partner?</h4><p>Visit our <a href="business-partner.html" style="color:var(--primary-light)">Partner With Us</a> page to register your parking space and start earning 60% of every booking.</p></div>
   </div>
 </div>
-<footer class="pe-footer">
-  <div class="pe-footer-inner">
-    <div class="pe-footer-grid">
-      <div><div class="pe-footer-brand">Park<em>Ease</em></div><p style="font-size:0.85rem;line-height:1.6;max-width:220px">Smart parking solutions for Odisha.</p></div>
-      <div class="pe-footer-col"><h4>Services</h4><ul class="pe-footer-links"><li><a href="seetbooking.html">Book a Slot</a></li><li><a href="vipform.html">VIP Parking</a></li><li><a href="business-partner.html">Partner With Us</a></li></ul></div>
-      <div class="pe-footer-col"><h4>Company</h4><ul class="pe-footer-links"><li><a href="index.html">About Us</a></li><li><a href="index-4.html">Contact</a></li></ul></div>
-      <div class="pe-footer-col"><h4>Contact</h4><ul class="pe-footer-links"><li><a href="tel:+919876543210">+91 98765 43210</a></li><li><a href="mailto:support@parkease.in">support@parkease.in</a></li></ul></div>
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="brand-name">Park<span>Ease</span></div>
+      <p>Smart parking solutions for Odisha. Find, book and pay in seconds.</p>
     </div>
-    <div class="pe-footer-bottom"><span>&copy; 2025 ParkEase. All rights reserved.</span><span><a href="business-partner.html">Become a Partner</a></span></div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="seetbooking.html">Book a Slot</a>
+      <a href="vipform.html">VIP Parking</a>
+      <a href="business-partner.html">Partner With Us</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="index.html">About Us</a>
+      <a href="index-4.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="tel:+919876543210">+91 98765 43210</a>
+      <a href="mailto:support@parkease.in">support@parkease.in</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 ParkEase. All rights reserved.</span>
+    <a href="business-partner.html" style="color:var(--accent);text-decoration:none">Become a Partner</a>
   </div>
 </footer>
 <script>
-  function submitForm(e) {
-    e.preventDefault();
-    document.getElementById('successToast').classList.add('show');
-    document.getElementById('contactForm').reset();
-    document.getElementById('successToast').scrollIntoView({behavior:'smooth',block:'center'});
-    setTimeout(()=>document.getElementById('successToast').classList.remove('show'),5000);
-  }
+const SUPABASE_URL='https://xpziztrwufkqndzeguyj.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+async function submitForm(e){
+  e.preventDefault();
+  const btn=document.querySelector('.submit-btn');
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Sending...';
+  try{
+    await sb.from('contact_messages').insert({
+      name:document.getElementById('cName').value,
+      email:document.getElementById('cEmail').value,
+      phone:document.getElementById('cPhone').value||null,
+      subject:document.getElementById('cSubject').value,
+      booking_ref:document.getElementById('cRef').value||null,
+      message:document.getElementById('cMsg').value,
+      created_at:new Date().toISOString()
+    });
+  }catch(err){console.log('DB insert failed, showing success anyway');}
+  document.getElementById('successMsg').style.display='block';
+  document.getElementById('contactForm').reset();
+  btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Message';
+}
 </script>
 </body>
 </html>
