@@ -1,139 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Log In - ParkEase</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #1a2942 0%, #2d5a3d 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-    .card { background: white; border-radius: 20px; padding: 44px 40px; width: 100%; max-width: 440px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-    .brand { text-align: center; margin-bottom: 32px; }
-    .brand-logo { font-size: 2rem; font-weight: 800; color: #1a2942; }
-    .brand-logo span { color: #f5a623; }
-    .brand-subtitle { font-size: 0.85rem; color: #888; margin-top: 4px; }
-    h2 { font-size: 1.5rem; font-weight: 800; color: #1a2942; text-align: center; margin-bottom: 8px; }
-    .sub { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 24px; }
-    .form-group { margin-bottom: 18px; }
-    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
-    .input-wrap { position: relative; }
-    .input-wrap i.icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #b0b8c1; font-size: 0.95rem; pointer-events: none; }
-    .input-wrap input { width: 100%; padding: 12px 14px 12px 40px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; color: #1a2942; background: #f8fafc; outline: none; transition: border-color 0.2s; }
-    .input-wrap input:focus { border-color: #f5a623; background: white; }
-    .toggle-pw { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #b0b8c1; background: none; border: none; font-size: 0.95rem; }
-    .options { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-    .remember { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #555; cursor: pointer; }
-    .remember input[type=checkbox] { accent-color: #f5a623; width: 16px; height: 16px; }
-    .forgot { font-size: 0.85rem; color: #f5a623; text-decoration: none; font-weight: 600; }
-    .btn-login { width: 100%; background: linear-gradient(135deg, #f5a623, #e8941a); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-    .btn-login:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
-    .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
-    .divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
-    .divider span { font-size: 0.8rem; color: #aaa; }
-    .signup-link { text-align: center; font-size: 0.9rem; color: #888; }
-    .signup-link a { color: #f5a623; font-weight: 700; text-decoration: none; }
-    .alert { border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-bottom: 16px; display: none; align-items: center; gap: 8px; }
-    .alert.show { display: flex; }
-    .alert-error { background: #ffebee; color: #e53935; }
-    .alert-success { background: #e8f5e9; color: #2e7d32; }
-    .db-badge { background: #e8f5e9; border: 1px solid #43a047; border-radius: 6px; padding: 6px 12px; font-size: 0.78rem; color: #2e7d32; text-align: center; margin-bottom: 20px; }
-    .demo-hint { background: #fff8e1; border: 1px solid #f5a623; border-radius: 8px; padding: 8px 12px; font-size: 0.78rem; color: #8a6200; text-align: center; margin-bottom: 16px; }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Log In — ParkEase</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{--p:#0F2D52;--pl:#1565C0;--a:#F59E0B;--ad:#D97706;--g:#16A34A;--r:#DC2626;--g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g400:#9CA3AF;--g600:#4B5563;--g800:#1F2937;--tr:all 0.2s ease;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(135deg,var(--p) 0%,#1a3a6e 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased;}
+.w{width:100%;max-width:440px;}
+.brand{text-align:center;margin-bottom:28px;}
+.brand a{display:inline-flex;align-items:center;gap:10px;text-decoration:none;}
+.bico{width:44px;height:44px;background:var(--a);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--p);font-size:20px;}
+.btxt{font-size:1.6rem;font-weight:900;color:#fff;letter-spacing:-0.5px;}
+.btxt em{color:var(--a);font-style:normal;}
+.card{background:#fff;border-radius:24px;box-shadow:0 20px 50px rgba(0,0,0,0.2);overflow:hidden;}
+.card-hd{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;padding:28px 32px 24px;}
+.card-hd h1{font-size:1.5rem;font-weight:800;margin-bottom:4px;}
+.card-hd p{font-size:0.875rem;color:rgba(255,255,255,0.75);}
+.card-bd{padding:28px 32px 32px;}
+.blive{display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.25);color:var(--g);padding:8px;border-radius:10px;font-size:0.8rem;font-weight:600;margin-bottom:18px;}
+.blive::before{content:'';width:7px;height:7px;background:var(--g);border-radius:50%;animation:lp 1.5s ease infinite;}
+@keyframes lp{0%,100%{opacity:1}50%{opacity:0.3}}
+.demo{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 14px;font-size:0.8rem;color:#92400e;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.fg{margin-bottom:18px;}
+.fl{display:block;font-size:0.78rem;font-weight:700;color:var(--g600);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:7px;}
+.fi-w{position:relative;}
+.fi-ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--g400);font-size:14px;pointer-events:none;}
+.fi{width:100%;padding:11px 13px 11px 38px;border:1.5px solid var(--g200);border-radius:10px;font-size:0.9rem;font-family:inherit;background:#fff;color:var(--g800);transition:var(--tr);}
+.fi:focus{outline:none;border-color:var(--pl);box-shadow:0 0 0 3px rgba(21,101,192,0.1);}
+.fi::placeholder{color:var(--g400);}
+.eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--g400);cursor:pointer;font-size:14px;padding:4px;}
+.fhelp{display:flex;justify-content:space-between;align-items:center;margin-top:7px;}
+.fchk{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--g600);cursor:pointer;}
+.fchk input{accent-color:var(--pl);cursor:pointer;}
+.forgot{font-size:0.8rem;color:var(--a);text-decoration:none;font-weight:600;}
+.sbtn{width:100%;padding:13px;background:var(--a);color:var(--p);border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;margin-top:22px;}
+.sbtn:hover{background:var(--ad);transform:translateY(-1px);box-shadow:0 4px 14px rgba(245,158,11,0.4);}
+.aftr{text-align:center;margin-top:18px;font-size:0.875rem;color:rgba(255,255,255,0.7);}
+.aftr a{color:var(--a);font-weight:700;text-decoration:none;}
+.emsg{background:#fef2f2;border:1px solid #fecaca;color:var(--r);padding:10px 14px;border-radius:10px;font-size:0.82rem;margin-bottom:14px;display:none;align-items:center;gap:8px;}
+.emsg.s{display:flex;}
+.omsg{background:#f0fdf4;border:1px solid #bbf7d0;color:var(--g);padding:10px 14px;border-radius:10px;font-size:0.82rem;margin-bottom:14px;display:none;align-items:center;gap:8px;}
+.omsg.s{display:flex;}</style>
 </head>
 <body>
-<div class="card">
+<div class="w">
   <div class="brand">
-    <div class="brand-logo">Park<span>Ease</span></div>
-    <div class="brand-subtitle">Smart Parking Management</div>
+    <a href="index.html"><div class="bico"><i class="fas fa-parking"></i></div>
+    <span class="btxt">Park<em>Ease</em></span></a>
   </div>
-  <h2>Welcome Back!</h2>
-  <p class="sub">Log in to manage your parking bookings</p>
-  <div class="db-badge"><i class="fa fa-database" style="margin-right:5px;"></i> Live database connected</div>
-  <div class="demo-hint"><i class="fa fa-info-circle"></i> Demo: <strong>demo@parkease.com</strong> / <strong>demo123</strong></div>
-  <div class="alert alert-error" id="errorMsg"><i class="fa fa-exclamation-circle"></i> <span id="errorText"></span></div>
-  <div class="alert alert-success" id="successMsg"><i class="fa fa-check-circle"></i> <span id="successText">Login successful! Redirecting...</span></div>
-  <form id="loginForm" onsubmit="handleLogin(event)">
-    <div class="form-group">
-      <label>Email Address</label>
-      <div class="input-wrap"><i class="fa fa-envelope icon"></i><input type="email" id="email" placeholder="you@example.com" required /></div>
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <div class="input-wrap">
-        <i class="fa fa-lock icon"></i>
-        <input type="password" id="password" placeholder="Min. 6 characters" required />
-        <button type="button" class="toggle-pw" onclick="togglePw()"><i class="fa fa-eye" id="eyeIcon"></i></button>
+  <div class="card">
+    <div class="card-hd"><h1>Welcome Back!</h1><p>Log in to manage your parking bookings</p></div>
+    <div class="card-bd">
+      <div class="blive">Live database connected</div>
+      <div class="demo"><i class="fas fa-info-circle"></i> Demo: <strong>demo@parkease.com</strong> / <strong>demo123</strong></div>
+      <div class="emsg" id="em"><i class="fas fa-exclamation-circle"></i> <span id="et">Invalid credentials.</span></div>
+      <div class="omsg" id="om"><i class="fas fa-check-circle"></i> Login successful! Redirecting...</div>
+      <div class="fg">
+        <label class="fl">Email Address</label>
+        <div class="fi-w"><i class="fas fa-envelope fi-ico"></i>
+          <input type="email" id="email" class="fi" placeholder="you@example.com" autocomplete="email">
+        </div>
       </div>
+      <div class="fg">
+        <label class="fl">Password</label>
+        <div class="fi-w"><i class="fas fa-lock fi-ico"></i>
+          <input type="password" id="password" class="fi" placeholder="Min. 6 characters" autocomplete="current-password">
+          <button class="eye" onclick="tp()" type="button"><i class="fas fa-eye" id="ei"></i></button>
+        </div>
+        <div class="fhelp">
+          <label class="fchk"><input type="checkbox" id="rem"> Remember me</label>
+          <a href="#" class="forgot">Forgot password?</a>
+        </div>
+      </div>
+      <button class="sbtn" id="lb" onclick="hl()"><i class="fas fa-sign-in-alt"></i> Log In</button>
     </div>
-    <div class="options">
-      <label class="remember"><input type="checkbox" /> Remember me</label>
-      <a href="#" class="forgot">Forgot password?</a>
-    </div>
-    <button type="submit" class="btn-login" id="loginBtn"><i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>Log In</button>
-  </form>
-  <div class="divider"><span>or</span></div>
-  <p class="signup-link">Don't have an account? <a href="signup.html">Sign Up Free</a></p>
+  </div>
+  <p class="aftr">Don't have an account? <a href="signup.html">Sign Up Free</a></p>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const SUPABASE_URL = 'https://xpziztrwufkqndzeguyj.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM';
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  function togglePw() {
-    const pw = document.getElementById('password'), eye = document.getElementById('eyeIcon');
-    pw.type = pw.type === 'password' ? 'text' : 'password';
-    eye.className = pw.type === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash';
-  }
-
-  async function handleLogin(e) {
-    e.preventDefault();
-    const btn = document.getElementById('loginBtn');
-    const errorDiv = document.getElementById('errorMsg');
-    const successDiv = document.getElementById('successMsg');
-    errorDiv.classList.remove('show');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right:8px;"></i>Logging in...';
-
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-
-    // Demo user shortcut
-    if (email === 'demo@parkease.com' && password === 'demo123') {
-      localStorage.setItem('parkease_logged_in', JSON.stringify({email, name: 'Demo User', id: 'demo'}));
-      successDiv.classList.add('show');
-      setTimeout(() => window.location.href = 'seetbooking.html', 1500);
-      return;
-    }
-
-    // Check against database
-    const { data: users, error } = await sb.from('users').select('*').eq('email', email);
-    if (error || !users || users.length === 0) {
-      document.getElementById('errorText').textContent = 'No account found with this email.';
-      errorDiv.classList.add('show');
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>Log In';
-      return;
-    }
-
-    const user = users[0];
-    if (user.password_hash !== btoa(password)) {
-      document.getElementById('errorText').textContent = 'Incorrect password. Please try again.';
-      errorDiv.classList.add('show');
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>Log In';
-      return;
-    }
-
-    localStorage.setItem('parkease_logged_in', JSON.stringify({
-      email: user.email, name: user.first_name + ' ' + user.last_name, id: user.id
-    }));
-    document.getElementById('successText').textContent = 'Welcome back ' + user.first_name + '! Redirecting...';
-    successDiv.classList.add('show');
-    setTimeout(() => window.location.href = 'seetbooking.html', 1500);
-  }
+const sb=window.supabase.createClient('https://xpziztrwufkqndzeguyj.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhweml6dHJ3dWZrcW5kemVndXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMDI5OTIsImV4cCI6MjA5Mzg3ODk5Mn0.-0230c8JwmK71uLAuYgvDyoQaT28Xbadtr0eVJPEoFM');
+function tp(){const p=document.getElementById('password'),i=document.getElementById('ei');if(p.type==='password'){p.type='text';i.className='fas fa-eye-slash';}else{p.type='password';i.className='fas fa-eye';}}
+async function hl(){
+  const email=document.getElementById('email').value.trim().toLowerCase();
+  const password=document.getElementById('password').value;
+  const btn=document.getElementById('lb');
+  const em=document.getElementById('em'),et=document.getElementById('et'),om=document.getElementById('om');
+  em.classList.remove('s');
+  if(!email||!password){et.textContent='Please fill in all fields.';em.classList.add('s');return;}
+  if(email==='demo@parkease.com'&&password==='demo123'){om.classList.add('s');localStorage.setItem('parkease_logged_in',JSON.stringify({email,name:'Demo User'}));setTimeout(()=>window.location.href='seetbooking.html',1200);return;}
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Logging in...';
+  try{
+    const{data,error}=await sb.from('users').select('*').eq('email',email).single();
+    if(error||!data)throw new Error('Account not found. Please sign up first.');
+    if(data.password_hash!==btoa(password))throw new Error('Incorrect password. Please try again.');
+    om.classList.add('s');
+    localStorage.setItem('parkease_logged_in',JSON.stringify({email,name:data.first_name+' '+data.last_name,id:data.id}));
+    setTimeout(()=>window.location.href='seetbooking.html',1200);
+  }catch(e){et.textContent=e.message||'Login failed.';em.classList.add('s');}
+  btn.disabled=false;btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Log In';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')hl();});
 </script>
 </body>
 </html>
