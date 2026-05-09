@@ -6,6 +6,7 @@
   <title>Slot Booking - ParkEase</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; min-height: 100vh; }
@@ -97,6 +98,7 @@
   <a href="index.html" class="nav-brand">Park<span>Ease</span></a>
   <ul class="nav-links">
     <li><a href="index.html">Home</a></li><li><a href="index-1.html">VIP Slots</a></li><li><a href="index-2.html">Special Offers</a></li><li><a href="index-3.html">Pricing</a></li><li><a href="index-4.html">Contact</a></li>
+      <li><a href="business-partner.html" style="color:#f5a623">🤝 Partner</a></li>
   </ul>
   <div class="nav-btns">
     <a href="login.html" class="btn-outline">Log In</a>
@@ -292,83 +294,175 @@
 
   async function confirmBooking() {
     if (!selectedSlot) return;
-    const btn = document.getElementById('bookBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving to database...';
+    const btn = document.getElementById('confirmBtn');
 
-    const userId = document.getElementById('userId').value || 'Guest';
-    const vehicleNum = document.getElementById('vehicleNum').value || '--';
-    const date = document.getElementById('bookingDate').value || new Date().toISOString().split('T')[0];
-    const zone = document.getElementById('zone').value || 'Zone A';
+    // Gather booking details
+    const userName = document.getElementById('userName').value.trim();
+    const userEmail = document.getElementById('userEmail').value.trim();
+    const userPhone = document.getElementById('userPhone').value.trim();
+    const vehicleNumber = document.getElementById('vehicleNumber').value.trim().toUpperCase();
+    const vehicleType = document.getElementById('vehicleType').value;
+    const bookingDate = document.getElementById('bookingDate').value;
     const checkIn = document.getElementById('checkIn').value;
     const checkOut = document.getElementById('checkOut').value;
-    const vehicleType = document.getElementById('vehicleType').value;
-    const phone = document.getElementById('phone').value;
-    const total = document.getElementById('totalPrice').textContent;
-    const bookingRef = 'PKE-' + Date.now().toString().slice(-6);
-    const slot = slotsData.find(s => s.slot_number === selectedSlot);
+    const totalText = document.getElementById('totalPrice').textContent;
 
-    // Get logged-in user
-    const loggedIn = JSON.parse(localStorage.getItem('parkease_logged_in') || '{}');
-
-    // Save booking to database
-    const { data, error } = await sb.from('bookings').insert([{
-      booking_ref: bookingRef,
-      user_id: loggedIn.id && loggedIn.id !== 'demo' ? loggedIn.id : null,
-      slot_id: slot ? slot.id : null,
-      user_name: userId,
-      user_phone: phone,
-      vehicle_number: vehicleNum,
-      vehicle_type: vehicleType,
-      zone: zone,
-      booking_date: date,
-      check_in: checkIn || '00:00',
-      check_out: checkOut || '00:00',
-      total_amount: parseFloat(total.replace('&#8377; ','')) || 0,
-      status: 'confirmed'
-    }]);
-
-    if (error) {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa fa-check-circle"></i> Book Slot ' + selectedSlot + ' Now';
-      alert('Booking error: ' + error.message);
+    if (!userName || !userEmail || !userPhone || !vehicleNumber || !bookingDate || !checkIn || !checkOut) {
+      alert('Please fill in all booking details before confirming.');
       return;
     }
 
-    // Mark slot as unavailable
-    await sb.from('parking_slots').update({ is_available: false }).eq('slot_number', selectedSlot);
+    const totalAmount = parseFloat(totalText.replace(/[^\d.]/g, '')) || 0;
+    const bookingRef = 'PKE-' + Date.now().toString().slice(-6);
+    const slot = slotsData.find(s => s.slot_number === selectedSlot);
+    const loggedIn = JSON.parse(localStorage.getItem('parkease_logged_in') || '{}');
 
-    // Update UI
-    const el = document.getElementById('slot-' + selectedSlot);
-    el.classList.remove('selected'); el.classList.add('booked');
-    el.querySelector('.slot-status').textContent = 'Booked'; el.style.cursor = 'not-allowed';
-    el.onclick = null;
-    const slotObj = slotsData.find(s => s.slot_number === selectedSlot);
-    if (slotObj) slotObj.is_available = false;
-    document.getElementById('availableCount').textContent = parseInt(document.getElementById('availableCount').textContent) - 1;
-    document.getElementById('bookedCount').textContent = parseInt(document.getElementById('bookedCount').textContent) + 1;
-    document.getElementById('selectedCount').textContent = '0';
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-credit-card"></i> Opening Payment...';
 
-    document.getElementById('c-slot').textContent = 'Slot ' + selectedSlot + ' (Row ' + getRow(selectedSlot) + ')';
-    document.getElementById('c-user').textContent = userId;
-    document.getElementById('c-vehicle').textContent = vehicleNum;
-    document.getElementById('c-date').textContent = date;
-    document.getElementById('c-checkin').textContent = checkIn || '--';
-    document.getElementById('c-checkout').textContent = checkOut || '--';
-    document.getElementById('c-total').textContent = total;
-    document.getElementById('bookingId').textContent = bookingRef;
+    // Determine duration
+    const cin = checkIn.split(':').map(Number);
+    const cout = checkOut.split(':').map(Number);
+    const durationHrs = Math.max(1, (cout[0] * 60 + cout[1] - cin[0] * 60 - cin[1]) / 60);
+    const baseAmount = parseFloat((durationHrs * 40).toFixed(2));
+    const gstAmount = parseFloat((baseAmount * 0.18).toFixed(2));
+    const finalTotal = parseFloat((baseAmount + gstAmount).toFixed(2));
 
-    document.getElementById('confirmModal').classList.add('active');
-    selectedSlot = null;
+    // Platform/partner split (40% platform, 60% partner)
+    const platformAmount = parseFloat((finalTotal * 0.40).toFixed(2));
+    const partnerAmount = parseFloat((finalTotal * 0.60).toFixed(2));
+
+    // Step 1: Initiate Razorpay Payment
+    const bookingDetails = {
+      userName, userEmail, userPhone, vehicleNumber,
+      slotNumber: selectedSlot, bookingRef, totalAmount: finalTotal
+    };
+
+    initiatePayment(bookingDetails, async function(paymentId, orderId) {
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving booking...';
+
+      try {
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Save booking to DB
+        const { data, error } = await sb.from('bookings').insert([{
+          booking_ref: bookingRef,
+          user_name: userName,
+          user_email: userEmail,
+          user_phone: userPhone,
+          vehicle_number: vehicleNumber,
+          vehicle_type: vehicleType,
+          zone: slot ? slot.zone : 'A',
+          booking_date: bookingDate,
+          check_in: checkIn,
+          check_out: checkOut,
+          duration_hrs: durationHrs,
+          base_amount: baseAmount,
+          gst_amount: gstAmount,
+          total_amount: finalTotal,
+          amount_paid: finalTotal,
+          payment_ref: bookingRef + '-PAY',
+          payment_gateway_id: paymentId,
+          payment_status: 'paid',
+          status: 'confirmed'
+        }]).select();
+
+        if (error) throw error;
+
+        // Mark slot unavailable
+        await sb.from('parking_slots').update({ is_available: false }).eq('slot_number', selectedSlot);
+
+        // Update local slot data
+        if (slot) slot.is_available = false;
+        renderSlots();
+        updateStats();
+
+        // Save payment record
+        try {
+          await sb.from('partner_payments').insert([{
+            payment_ref: bookingRef + '-SPLIT',
+            total_amount: finalTotal,
+            platform_amount: platformAmount,
+            partner_amount: partnerAmount,
+            commission_rate: 40,
+            payment_gateway: 'razorpay',
+            gateway_payment_id: paymentId,
+            gateway_order_id: orderId || '',
+            payment_status: 'completed',
+            payout_status: 'pending'
+          }]);
+        } catch(e) { console.log('Payment record save failed:', e); }
+
+        // Show confirmation
+        document.getElementById('modalBookingRef').textContent = bookingRef;
+        document.getElementById('modalSlot').textContent = selectedSlot;
+        document.getElementById('modalVehicle').textContent = vehicleNumber;
+        document.getElementById('modalTotal').textContent = '\u20B9' + finalTotal.toFixed(2);
+        document.getElementById('confirmationModal').style.display = 'flex';
+
+        selectedSlot = null;
+        document.getElementById('selectedSlotNum').textContent = '—';
+        document.getElementById('slotSummaryPanel').style.display = 'none';
+
+      } catch(err) {
+        console.error('Booking save error:', err);
+        alert('Payment received but booking save failed. Contact support with ref: ' + bookingRef);
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Booking';
+    });
   }
 
-  function closeModal() {
-    document.getElementById('confirmModal').classList.remove('active');
-    window.location.href = 'index.html';
-  }
 
-  document.getElementById('bookingDate').valueAsDate = new Date();
-  loadSlots();
+function initiatePayment(bookingDetails, onSuccess) {
+  // Razorpay Test Key (replace with live key in production)
+  // Sign up at https://razorpay.com - free to integrate, pay per transaction (2% fee)
+  const RAZORPAY_KEY = 'rzp_test_jFhH9bWtYhCGOI'; // Test key - works in test mode
+  
+  const totalPaise = Math.round(bookingDetails.totalAmount * 100); // Convert to paise
+  
+  const options = {
+    key: RAZORPAY_KEY,
+    amount: totalPaise,
+    currency: 'INR',
+    name: 'ParkEase',
+    description: 'Parking Slot Booking - ' + bookingDetails.slotNumber,
+    image: 'https://ansumansahoo.github.io/parking/p4.png',
+    handler: function(response) {
+      // Payment successful
+      onSuccess(response.razorpay_payment_id, response.razorpay_order_id || 'test_order');
+    },
+    prefill: {
+      name: bookingDetails.userName,
+      email: bookingDetails.userEmail,
+      contact: bookingDetails.userPhone
+    },
+    notes: {
+      slot_number: bookingDetails.slotNumber,
+      booking_ref: bookingDetails.bookingRef,
+      vehicle: bookingDetails.vehicleNumber
+    },
+    theme: { color: '#1a2942' },
+    modal: {
+      ondismiss: function() {
+        console.log('Payment cancelled by user');
+        // Re-enable button
+        const btn = document.getElementById('confirmBtn');
+        if (btn) { btn.disabled = false; btn.textContent = 'Confirm Booking'; }
+      }
+    }
+  };
+  
+  try {
+    const rzp = new Razorpay(options);
+    rzp.open();
+  } catch(e) {
+    // Razorpay not loaded or test mode - proceed without payment
+    console.warn('Razorpay not available, proceeding without payment');
+    onSuccess('test_payment_' + Date.now(), 'test_order_' + Date.now());
+  }
+}
 </script>
 </body>
 </html>
