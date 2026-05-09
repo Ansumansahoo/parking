@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In - ParkEase</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #1a2942 0%, #2d5a3d 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+    .card { background: white; border-radius: 20px; padding: 44px 40px; width: 100%; max-width: 440px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .brand { text-align: center; margin-bottom: 32px; }
+    .brand-logo { font-size: 2rem; font-weight: 800; color: #1a2942; }
+    .brand-logo span { color: #f5a623; }
+    .brand-subtitle { font-size: 0.85rem; color: #888; margin-top: 4px; }
+    h2 { font-size: 1.5rem; font-weight: 800; color: #1a2942; text-align: center; margin-bottom: 8px; }
+    .sub { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 28px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
+    .input-wrap { position: relative; }
+    .input-wrap i.icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #b0b8c1; font-size: 0.95rem; pointer-events: none; }
+    .input-wrap input { width: 100%; padding: 12px 14px 12px 40px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; color: #1a2942; background: #f8fafc; outline: none; transition: border-color 0.2s; }
+    .input-wrap input:focus { border-color: #f5a623; background: white; }
+    .toggle-pw { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #b0b8c1; background: none; border: none; font-size: 0.95rem; }
+    .options { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .remember { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #555; cursor: pointer; }
+    .remember input[type=checkbox] { accent-color: #f5a623; width: 16px; height: 16px; }
+    .forgot { font-size: 0.85rem; color: #f5a623; text-decoration: none; font-weight: 600; }
+    .forgot:hover { text-decoration: underline; }
+    .btn-login { width: 100%; background: linear-gradient(135deg, #f5a623, #e8941a); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+    .divider span { font-size: 0.8rem; color: #aaa; }
+    .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .social-btn { border: 1.5px solid #e2e8f0; background: white; padding: 11px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #444; transition: border-color 0.2s; }
+    .social-btn:hover { border-color: #f5a623; }
+    .signup-link { text-align: center; font-size: 0.9rem; color: #888; }
+    .signup-link a { color: #f5a623; font-weight: 700; text-decoration: none; }
+    .signup-link a:hover { text-decoration: underline; }
+    .alert { border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-bottom: 16px; display: none; align-items: center; gap: 8px; }
+    .alert.show { display: flex; }
+    .alert-error { background: #ffebee; color: #e53935; }
+    .alert-success { background: #e8f5e9; color: #2e7d32; }
+    .demo-hint { background: #fff8e1; border: 1px solid #f5a623; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: #8a6200; margin-bottom: 20px; text-align: center; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">
+    <div class="brand-logo">Park<span>Ease</span></div>
+    <div class="brand-subtitle">Smart Parking Management</div>
+  </div>
+  <h2>Welcome Back!</h2>
+  <p class="sub">Log in to manage your parking bookings</p>
+  <div class="demo-hint"><i class="fa fa-info-circle"></i> Demo: <strong>demo@parkease.com</strong> / <strong>demo123</strong></div>
+  <div class="alert alert-error" id="errorMsg"><i class="fa fa-exclamation-circle"></i> <span id="errorText">Invalid email or password.</span></div>
+  <div class="alert alert-success" id="successMsg"><i class="fa fa-check-circle"></i> Login successful! Redirecting...</div>
+  <form id="loginForm" onsubmit="handleLogin(event)">
+    <div class="form-group">
+      <label>Email Address</label>
+      <div class="input-wrap">
+        <i class="fa fa-envelope icon"></i>
+        <input type="email" id="email" placeholder="you@example.com" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-wrap">
+        <i class="fa fa-lock icon"></i>
+        <input type="password" id="password" placeholder="Min. 6 characters" required />
+        <button type="button" class="toggle-pw" onclick="togglePw()"><i class="fa fa-eye" id="eyeIcon"></i></button>
+      </div>
+    </div>
+    <div class="options">
+      <label class="remember"><input type="checkbox" /> Remember me</label>
+      <a href="#" class="forgot">Forgot password?</a>
+    </div>
+    <button type="submit" class="btn-login"><i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>Log In</button>
+  </form>
+  <div class="divider"><span>or continue with</span></div>
+  <div class="social-btns">
+    <button class="social-btn" onclick="socialLogin()"><i class="fab fa-google" style="color:#EA4335;"></i> Google</button>
+    <button class="social-btn" onclick="socialLogin()"><i class="fa fa-phone" style="color:#25D366;"></i> Phone OTP</button>
+  </div>
+  <p class="signup-link">Don't have an account? <a href="signup.html">Sign Up Free</a></p>
+</div>
+<script>
+  function togglePw() {
+    const pw = document.getElementById('password'), eye = document.getElementById('eyeIcon');
+    pw.type = pw.type === 'password' ? 'text' : 'password';
+    eye.className = pw.type === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash';
+  }
+  function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    document.getElementById('errorMsg').classList.remove('show');
+    const users = JSON.parse(localStorage.getItem('parkease_users') || '[]');
+    const user = users.find(u => u.email === email && u.password === password);
+    if (user || (email === 'demo@parkease.com' && password === 'demo123')) {
+      document.getElementById('successMsg').classList.add('show');
+      localStorage.setItem('parkease_logged_in', JSON.stringify({email: email, name: user ? (user.firstName+' '+user.lastName) : 'Demo User'}));
+      setTimeout(() => { window.location.href = 'seetbooking.html'; }, 1500);
+    } else {
+      document.getElementById('errorText').textContent = 'Invalid credentials. Use demo@parkease.com / demo123';
+      document.getElementById('errorMsg').classList.add('show');
+    }
+  }
+  function socialLogin() { alert('Social login: connect your OAuth provider here.'); }
+</script>
+</body>
+</html>
