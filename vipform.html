@@ -7,6 +7,23 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{--primary:#0F2D52;--accent:#F59E0B;}
+body{font-family:'Inter',system-ui,sans-serif!important;}
+nav{background:#0F2D52!important;height:64px!important;display:flex!important;align-items:center!important;padding:0 24px!important;position:sticky!important;top:0!important;z-index:1000!important;box-shadow:0 2px 12px rgba(0,0,0,0.25)!important;}
+.nav-inner{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-0.5px;}
+.nav-brand-icon{width:36px;height:36px;background:#F59E0B;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#0F2D52;font-size:16px;}
+.nav-brand span{color:#F59E0B;}
+.nav-links{display:flex;list-style:none;gap:4px;align-items:center;}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.875rem;font-weight:500;padding:7px 14px;border-radius:6px;transition:all 0.2s ease;}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,0.1);}
+.nav-links a.active{color:#F59E0B;font-weight:600;}
+.partner-link{color:#F59E0B!important;font-weight:600!important;border:1px solid rgba(245,158,11,0.4)!important;border-radius:999px!important;}
+.nav-btns{display:flex;gap:10px;align-items:center;}
+.btn-outline{color:rgba(255,255,255,0.85);background:transparent;border:1.5px solid rgba(255,255,255,0.3);padding:7px 16px;border-radius:999px;font-size:0.85rem;font-weight:600;cursor:pointer;text-decoration:none;}
+.btn-fill{background:#F59E0B;color:#0F2D52;border:none;padding:8px 18px;border-radius:999px;font-size:0.85rem;font-weight:700;cursor:pointer;text-decoration:none;}
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; min-height: 100vh; }
     nav { background: #1a2942; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
@@ -44,8 +61,23 @@
 </head>
 <body>
 <nav>
-  <a href="index.html" class="nav-brand">Park<span>Ease</span></a>
-  <a href="index.html" class="back-btn"><i class="fa fa-arrow-left"></i> Back to Home</a>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-brand-icon"><i class="fas fa-parking"></i></div>
+      Park<span>Ease</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="seetbooking.html">Book a Slot</a></li>
+      <li><a href="vipform.html" class="active">VIP Parking</a></li>
+      <li><a href="index-4.html">Contact</a></li>
+      <li><a href="business-partner.html" class="partner-link">🤝 Partner With Us</a></li>
+    </ul>
+    <div class="nav-btns">
+      <a href="login.html" class="btn-outline">Log In</a>
+      <a href="signup.html" class="btn-fill">Sign Up Free</a>
+    </div>
+  </div>
 </nav>
 
 <div class="main">
@@ -174,5 +206,25 @@
     }
   }
 </script>
+<footer style="background:#0F2D52;color:rgba(255,255,255,0.7);padding:48px 24px 24px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px;">
+      <div><div style="font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:10px;">Park<span style="color:#F59E0B">Ease</span></div><p style="font-size:0.85rem;line-height:1.6;max-width:220px">Smart parking solutions for Odisha.</p></div>
+      <div><h4 style="color:#fff;font-size:0.78rem;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em">Services</h4>
+        <ul style="list-style:none"><li style="margin-bottom:8px"><a href="seetbooking.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">Book a Slot</a></li><li style="margin-bottom:8px"><a href="vipform.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">VIP Parking</a></li><li style="margin-bottom:8px"><a href="business-partner.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">Partner With Us</a></li></ul>
+      </div>
+      <div><h4 style="color:#fff;font-size:0.78rem;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em">Company</h4>
+        <ul style="list-style:none"><li style="margin-bottom:8px"><a href="index.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">About Us</a></li><li style="margin-bottom:8px"><a href="index-4.html" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">Contact</a></li></ul>
+      </div>
+      <div><h4 style="color:#fff;font-size:0.78rem;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em">Contact</h4>
+        <ul style="list-style:none"><li style="margin-bottom:8px"><a href="tel:+919876543210" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">+91 98765 43210</a></li><li style="margin-bottom:8px"><a href="mailto:support@parkease.in" style="color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.875rem">support@parkease.in</a></li></ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:18px;display:flex;justify-content:space-between;font-size:0.78rem;flex-wrap:wrap;gap:10px;">
+      <span>&copy; 2025 ParkEase. All rights reserved.</span>
+      <span><a href="business-partner.html" style="color:#F59E0B;text-decoration:none">Become a Partner</a></span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
